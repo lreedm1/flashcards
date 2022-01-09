@@ -1,0 +1,36 @@
+#import all the markdown files in the directory
+#create a csv with the title and data for each file
+
+import os
+
+directory = "/Users/reed/Documents/Obsidian - Quizlet test"
+
+def get_files(directory):
+    files = []
+    for file in os.listdir(directory):
+        if file.endswith(".md"):
+            files.append(file)
+    return files
+
+def get_data(files):
+    data = []
+    for file in files:
+        with open(directory + "/" + file, "r") as f:
+            data.append(f.read())
+    return data
+
+def create_csv(data):
+    with open("data.csv", "w") as f:
+        for i in range(len(data)):
+            #write the title of the file without the .md suffix and the data of the file
+            f.write(files[i][:-3] + "," + data[i] + "\n")
+
+def main():
+    print("Getting files...")
+    files = get_files(directory)
+    print("Getting data...")
+    data = get_data(files)
+    print("Creating csv...")
+    create_csv(data)
+    #print a done message and the location of the csv
+    print(f"Done! Data is located at {os.getcwd()}/data.csv")
