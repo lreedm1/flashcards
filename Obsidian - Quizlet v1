@@ -1,6 +1,3 @@
-#import all the markdown files in the directory
-#create a csv with the title and data for each file
-
 import os
 
 directory = "/Users/reed/Documents/Obsidian - Quizlet test"
@@ -16,14 +13,62 @@ def get_data(files):
     data = []
     for file in files:
         with open(directory + "/" + file, "r") as f:
-            data.append(f.read())
+            x = f.read()
+            if len(x) < 5:
+                continue
+
+            #add a sigle space to the end of the file to make it easier to split
+            x += " "
+            
+            # remove the text between "[[" and "|", then remove the characters "[" and "]"
+            for i in range(len(x)):
+                if x[i:i+2] == "[[":
+                    for a in range(len(x[i:])):
+                        a = a + i
+                        if x[ a:a + 2] == "]]":
+                            print(f'brackets found at {i,a}:{x[i:a+2]} in {file}')
+                            b = x.find("|",i,a)
+                            
+                            if b != -1:
+                                print(f'| found at {b}')
+                                print(f'deleting "{x[i:b]}" from {file} because it contains a pipe')
+                                x = x[:i] + x[b+1:]
+                            break
+
+            #remove all "[" and "]"
+            x = x.replace("[", "")
+            x = x.replace("]", "")
+
+            #remove the first line of the file if it starts with "#"
+            if x[0] == "#":
+                # y exists because f-strings can't contain a backslash
+                y = x[:x.find("\n")]
+                print(f'deleting "{y}" from "{file}" because it starts with "#"')
+                x = x[x.find("\n") + 1:]
+            
+            # if the file starts with "See", skip it
+            if x.find("See") == 0:
+                print(f'skipping {file} because x.find("See") produced {x.find("See")}')
+                continue
+            
+            # remove all occurrences of "See" that follow a newline and all text after it    
+            x = x[:x.find("See")]
+            
+            data.append([file, x])
     return data
 
+
+
 def create_csv(data):
-    with open("data.csv", "w") as f:
+    with open("data.txt", "w") as f:
         for i in range(len(data)):
             #write the title of the file without the .md suffix and the data of the file
-            f.write(files[i][:-3] + "," + data[i] + "\n")
+            f.write(data[i][0][:-3] + ";;" + data[i][1] + ";;;")
+
+
+
+    
+
 
 def main():
     print("Getting files...")
@@ -33,4 +78,6 @@ def main():
     print("Creating csv...")
     create_csv(data)
     #print a done message and the location of the csv
-    print(f"Done! Data is located at {os.getcwd()}/data.csv")
+    print(f"Done! Data is located at {os.getcwd()}/data.txt")
+
+main()
