@@ -66,10 +66,6 @@ def create_csv(data):
             f.write(data[i][0][:-3] + ";;" + data[i][1] + ";;;")
 
 
-
-    
-
-
 def main():
     print("Getting files...")
     files = get_files(directory)
