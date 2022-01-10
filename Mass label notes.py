@@ -12,53 +12,65 @@ def get_files(directory):
     print(files)
     return files
 
-def read_files(files):
+def read_files(files, debug):
     data = []
     for i in range(len(files)):
         file = files[i]
-        print(f'{i} out of {len(files)} files reveiwed')
+        print(f'{i} of {len(files)} files reveiwed\n')
+        
+        #read the contents of the file and save the variable contents
         with open(directory + "/" + file, "r") as f:
+            print(f'Reading    --{file}--')
             contents = f.read()
-            if contents.find("#todo") == 0:
-                print(f'{file} already has #todo at the beginning')
-                continue
-            elif contents.find("#flashcard") == 0:
-                print(f'{file} already has #flashcard at the beginning')
-                continue
-            
-        input("Press enter to continue")  
-        with open(directory + "/" + file, "w") as f:
-            if len(contents) == 0:
-                print(contents)
-                x = input(f'{file} is empty, adding to the todo list')
-                print(contents)
-                f.write(f'#todo\n{contents}')
-                input(contents)
-                continue
-            print(f'now reading {contents}')
-            f.write(contents)    
-            #present the user with the file and ask if they want to add it to the todo list and if they do, add it
-            File_and_contents = f'File:\n{file[:-3]}\n\nContents:\n{contents}\n\n'
-            y = user_input(f'{File_and_contents}Add to the flashcard list? (y/n) ', ['y', 'n'], 'Please enter a command')
-            if y == 'y':
-                f.write("#flashcard\n{contents}")
 
-            else:
-                #clear()
-                y = user_input(f'{File_and_contents}Add file to todo list? (y/n) ', ['y', 'n'], 'Please enter a command')
-                if y == 'y':
-                    f.write(f'#todo\n{contents}')
+        #check if the file is labled and continue if it is
+        labels = ['#flashcard', '#personal', '#done_no_flashcard', '#todo']
+        if check_labels(contents, labels, file):
+            continue
+
+        print(f'{file} has no label')
+        #present the user with lables one by one until they add one
+        user_label(contents, labels, file, debug)
+
+        clear(debug)
             
     return 
 
-def clear():
-    os.system('clear')
+def check_labels(contents, labels, file):
+    if len(contents) == 0:
+        print(f'           --{file}-- is empty, marking as #todo')
+        with open(directory + "/" + file, "w") as f:
+            f.write('#todo\n')
+        return True
+    for i in labels:
+        if contents.find(i) == 0:
+            print(f'           --{file}-- is labled {i}')
+            return True
+    return False
+
+
+def user_label(contents, labels, file, debug):
+    File_and_contents = f'------------\n{file[:-3]}\n\n{contents}\n\n'
+    for i in labels:
+        clear(debug)
+        answer = user_input(f'{File_and_contents}Label {i}? (Y/n) ', ['y', 'n', ''], 'Please enter a command')
+        #if answer is y or blank, add the label to the file
+        if answer == 'y' or answer == "":
+            with open(directory + "/" + file, "w") as f:
+                f.write(f'{i}\n{contents}')
+            return
+    print(f'No label was added')
+    user_label(file, contents)
+
+
+def clear(debug): 
+    if not debug:
+        os.system('clear && printf "\e[3J"')
 
 
 def user_input(prompt, responses, error_message):
     while True:
         x = input(prompt)
-        #clear()
         if x in responses:
             return x
         elif x == 'q':
@@ -67,11 +79,22 @@ def user_input(prompt, responses, error_message):
             print(error_message)
             continue
 
+    
 def main():
-    #lear()
-    print("Welcome to the Todo List Maker")
+    #ask the user if they want to run in debug mode
+    debug = user_input("Run in debug mode? (Y/n) ", ['y', 'n', ''], 'Please enter a command')
+    if debug == 'y' or debug == "":
+        debug = True
+    else:
+        debug = False
+    clear(debug)
+    print("Welcome to the Mass Label Notes program!")
+    
+    #read all the files in the directory
     files = get_files(directory)
-    read_files(files)
+    #get work done
+    read_files(files, debug)
     return
+
 
 main()
