@@ -1,12 +1,12 @@
 import os
-
-directory = "/Users/reed/Library/Mobile Documents/iCloud~md~obsidian/Documents/alpha"
+from titlecase import titlecase
+directory = "/Users/reed/Library/Mobile Documents/iCloud~md~obsidian/Documents/alpha/"
 
 def get_files(directory):
     files = []
     #add all files in the directory to the list
     for file in os.listdir(directory):
-        if file.endswith(".md"):
+        if file.endswith(".md") and file[0] != '.':
             files.append(file)
     print("We got the files!")
     print(files)
@@ -18,6 +18,9 @@ def read_files(files, debug):
         file = files[i]
         print(f'{i} of {len(files)} files reveiwed\n')
         
+        # check the file for proper capitalization, and rename it to sentence case if it's not sentence case
+        file = sentence_case(file, debug)
+
         #read the contents of the file and save the variable contents
         with open(directory + "/" + file, "r") as f:
             print(f'Reading    --{file}--')
@@ -35,6 +38,20 @@ def read_files(files, debug):
         clear(debug)
             
     return 
+
+def sentence_case(file_true, debug):
+    #check if the file is already sentence case and remove the ".md" extension
+    print(f'file_true: {file_true}')
+    file = file_true[:-3]
+    while file[-3:] == ".md":
+        file = file[:-3].lower()
+    capitalized_file = titlecase(file)
+    if file != capitalized_file:
+        print(f'{file} is not sentence case, renaming to {capitalized_file}')
+        os.rename(directory + file_true, directory + capitalized_file + ".md")
+        return capitalized_file + ".md"
+    
+    return file + ".md"
 
 def check_labels(contents, labels, file):
     if len(contents) == 0:
