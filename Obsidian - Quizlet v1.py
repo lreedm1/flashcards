@@ -55,8 +55,8 @@ def get_data(files):
             # remove all occurrences of "See" that follow a newline and all text after it    
             x = x[:x.find("See")]
             
-            # if the file still has length, add it to the data list
-            if len(x) > 0:
+            # if the file still has length, and contains '#flashcard', add it to the data list
+            if len(x) > 0 and x.find("#flashcard") != -1:
                 data.append([file, x])
     return data
 
