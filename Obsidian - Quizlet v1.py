@@ -40,6 +40,10 @@ def get_data(files):
             x = x.replace("[", "")
             x = x.replace("]", "")
 
+            # if the file does not contain "#flashcard", then skip it
+            if x.find("#flashcard") == -1:
+                continue
+            
             #remove the first line of the file if it starts with "#"
             while x[0] == "#":
                 # y exists because f-strings can't contain a backslash
@@ -55,8 +59,8 @@ def get_data(files):
             # remove all occurrences of "See" that follow a newline and all text after it    
             x = x[:x.find("See")]
             
-            # if the file still has length, and contains '#flashcard', add it to the data list
-            if len(x) > 0 and x.find("#flashcard") != -1:
+            # if the file still has length, add it to the data list
+            if len(x) > 0:
                 data.append([file, x])
     return data
 
