@@ -1,6 +1,7 @@
 import os
+import pyperclip as pc
 
-directory = "/Users/reed/Documents/Obsidian - Quizlet test"
+directory = "/Users/reed/Library/Mobile Documents/iCloud~md~obsidian/Documents/alpha"
 
 def get_files(directory):
     files = []
@@ -14,8 +15,7 @@ def get_data(files):
     for file in files:
         with open(directory + "/" + file, "r") as f:
             x = f.read()
-            if len(x) < 5:
-                continue
+            
 
             #add a sigle space to the end of the file to make it easier to split
             x += " "
@@ -40,7 +40,7 @@ def get_data(files):
             x = x.replace("]", "")
 
             #remove the first line of the file if it starts with "#"
-            if x[0] == "#":
+            while x[0] == "#":
                 # y exists because f-strings can't contain a backslash
                 y = x[:x.find("\n")]
                 print(f'deleting "{y}" from "{file}" because it starts with "#"')
@@ -54,12 +54,20 @@ def get_data(files):
             # remove all occurrences of "See" that follow a newline and all text after it    
             x = x[:x.find("See")]
             
-            data.append([file, x])
+            # if the file still has length, add it to the data list
+            if len(x) > 0:
+                data.append([file, x])
     return data
 
 
 
 def create_csv(data):
+    print("Copying data to clipboard...")
+    sheet = ""
+    for i in range(len(data)):
+        sheet += f"{data[i][0][:-3]};;{data[i][1]};;;"
+    pc.copy(sheet)
+    
     with open("data.txt", "w") as f:
         for i in range(len(data)):
             #write the title of the file without the .md suffix and the data of the file
