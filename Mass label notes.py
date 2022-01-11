@@ -5,6 +5,7 @@ directory = "/Users/reed/Library/Mobile Documents/iCloud~md~obsidian/Documents/a
 def get_files(directory):
     files = []
     #add all files in the directory to the list
+    
     for file in os.listdir(directory):
         if file.endswith(".md") and file[0] != '.':
             files.append(file)

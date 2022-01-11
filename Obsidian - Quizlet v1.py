@@ -6,7 +6,7 @@ directory = "/Users/reed/Library/Mobile Documents/iCloud~md~obsidian/Documents/a
 def get_files(directory):
     files = []
     for file in os.listdir(directory):
-        if file.endswith(".md"):
+        if file.endswith(".md") and file[0] != ".":
             files.append(file)
     return files
 
@@ -14,6 +14,7 @@ def get_data(files):
     data = []
     for file in files:
         with open(directory + "/" + file, "r") as f:
+            print(f'Reading    --{file}--')
             x = f.read()
             
 
