@@ -5,13 +5,17 @@ In Operant Conditioning, the tendency for an agent to respond to a stimulus simi
 
 The opposite of Discrimination;;;Natural Reinforcer;;A naturally reinforcing stimulus in Operant Conditioning that causes Reinforcement
 
-The opposite of a Conditioned Reinforcer;;;Unconscious;;Cognitive processes that happen without conscious awareness;;;Intermittent Reinforcement;;In Operant Conditioning, a type of Reinforcement that occasionally  reinforces an Agent for demonstrating the Operant Behavior;;;Figure Ground;;One of the  Gestalt Principles of Organization 
+  
+
+The opposite of a Conditioned Reinforcer;;;Intermittent Reinforcement;;In Operant Conditioning, a type of Reinforcement that occasionally reinforces an Agent for demonstrating the Operant Behavior;;;Figure Ground;;One of the  Gestalt Principles of Organization 
 
 Defined as the tendency for people to perceive objects as distinct from the ground;;;Introspection;;The process of identifying patterns of thought by 
 1. Subjecting many  Humans to a Stimulus
 2. Asking them to describe their conscious experience
 
 Associated with Edward Titchener;;;Motion Parallax;;A Monocular Depth Cue and Optical Illusion 
+
+  
 
 Arises from the apparent high velocity of close objects relative to distant objects while in motion;;;ghrellin;;hormone associated with hunger;;;Scheduling;;Make activities actionable:
 	Remove ambiguity
@@ -63,7 +67,7 @@ One of the Major Historical Psychological Figures;;;Scientific Theory;;A hypothe
 
 It can be:
 1.  Emotion Focused or  Problem focused
-2. Conscious or Unconscious
+2. Conscious or Unconscious Processes
 3. Adaptive or  Maladaptive;;;Herman Ebbinghaus;;A memory researcher who demonstrated the Forgetting Curve, Learning Curve, and Spacing Effect
 
 1. Forgetting follows an inverse natural growth  curve { e^(-x) } 
@@ -100,12 +104,14 @@ First described by Edward Tolman;;;Perceptual Constancy;;the phenomenon in which
 1. Natural Reinforcer - Innately reinforcing
 2. Conditioned Reinforcer - Requires an association with a Natural Reinforcer 
 
-Both Natural Reinforcers and Conditioned Reinforcers can stimulate an Agent externally Extrinsic Motivation 1, or internally Intrinsic Motivation 1
+Both Natural Reinforcers and Conditioned Reinforcers can stimulate an Agent externally Extrinsic Motivation, or internally Intrinsic Motivation
 
-;;;Carl Rogers;;Humanistic Psychologist that developed client / patient centered treatment
+;;;Intrinsic Motivation;;In Operant Conditioning, the anticipation of an internal Stimulus
+
+The opposite of Extrinsic Motivation;;;Carl Rogers;;Humanistic Psychologist that developed client / patient centered treatment
 
 (1902 - 1987) - United States
-One of the Major Historical Psychological Figures;;;Wilhelm Wundt;;The founder of Psychology and Structuralism 
+One of the Major Historical Psychological Figures;;;Binocular Depth Cue;;A visual cue that assists in estimating the distance to an object through two perspectives (usually two eyes);;;Wilhelm Wundt;;The founder of Psychology and Structuralism 
 
 (1832 - 1920) | Lived in Germany
 One of the Major Historical Psychological Figures;;;Discrimination;;In Classical Conditioning, when an Agent responds to a Conditioned Stimulus but not to a similar, Neutral Stimulus
@@ -118,9 +124,7 @@ The opposite of Generalization;;;Charles Darwin;;In Psychology:
 
 (1809 - 1882) - England;;;Robert Rescorla;;
 Contingency model - Proposed that Classical Conditioning works best if a clear causal relationship is established between the Conditioned Stimulus and the Unconditioned Stimulus
-(1940 - 2020);;;Extrinsic Motivation 1;;In Operant Conditioning, the anticipation of an external Stimulus 
-
-The opposite of Intrinsic Motivation 1;;;Ideas whose time has come;;1. De-professionalism of lectures
+(1940 - 2020);;;Ideas whose time has come;;1. De-professionalism of lectures
 	1. Lectures are now a comodity avaliable online
 	2. Professor time much better spent assisting students 1v1 or answering questions
 
@@ -139,48 +143,56 @@ Differences between reinforcement and punishment on Operant Behavior:
 1. Reinforcement - Increase the frequency / probability  of an operant behavior
 2. Punishment - Decrease the frequency / probability  of an operant behavior
 
-;;;Top-down processing;;definition #term 
-the process of interpreting information using preconceived notions which increases processing speed and creates Perceptual Constancy while decreasing effort but risks misinterpretation of the stimuli. ;;;Negative Discriminative Stimulus;;The type of Stimulus within Differential Reinforcement that decreases the frequency of Response
+;;;Top-down processing;;the process of interpreting information using preconceived notions which increases processing speed and creates Perceptual Constancy while decreasing effort but risks misinterpretation of the stimuli. ;;;Negative Discriminative Stimulus;;The type of Stimulus within Differential Reinforcement that decreases the frequency of Response
 
-The opposite of a Discriminative Stimulus;;;Retinal Disparity;;the difference in the images projected on the retina of each eye;;;Chloroplasts;;Organelles within mesophyll plant cells and eukaryotic algae cells that house the granum (stacks of torus shaped Thylakoids) which maintain a concentration gradient to produce ATP & NADPH from ADP and NADP+;;;Proximity;;One of the Gestalt Principles of Organization 
+The opposite of a Discriminative Stimulus;;;Retinal Disparity;;the difference in the images projected on the retina of each eye;;;Chloroplasts;;Organelles within mesophyll plant cells and eukaryotic algae cells that house the granum (stacks of torus shaped Thylakoids) which maintain a concentration gradient to produce ATP & NADPH from ADP and NADP+;;;Proximity;;The tendency for people to view close objects as the same object
 
- States that people tend to organize objects close to each other into a perceptual group and interpret them as a single entity. Also called law (or principle) of proximity.;;;Reinforcement;;In Operant Conditioning
+One of the Gestalt Principles of Organization 
+Also called law (or principle) of proximity.;;;Reinforcement;;In Operant Conditioning
 - The process of increasing the frequency / probability of an Operant Behavior using a Reinforcer. ;;;William James;;Founder of Functionalism
 
 (1842 - 1910) - United States
 One of the Major Historical Psychological Figures;;;Albert Bandura;;1. Performed the 'Bo-Bo Doll' Experiment
-2. Popularized Observational Learning ;;;Fixed Interval Schedule;;In Operant Conditioning, a Reinforcement Schedule that predictably reinforces an Operant Behavior based upon the amount of time that's passed;;;Bottom-up processing;;A type of information processing which starts by analyzing the most basic units of information, such as individual letters or numbers, and then gaining more knowledge about these units by abstracting out more general information;;;Color Constancy;;a type of Perceptual Constancy defined as the ability to recognize objects as having the same color despite variations in the color of the light that falls on them;;;Closure;;One of the Gestalt Principles of Organization which states that people tend to perceive incomplete forms such as images or sounds as complete by synthesizing the missing units.  Also called law of closure; principle of closure;;;Negative Reinforcement;;In Operant Conditioning, a type of Reinforcement that removes an undesirable Stimulus after an Agent demonstrates the Operant Behavior
+2. Popularized Observational Learning ;;;Fixed Interval Schedule;;In Operant Conditioning, a Reinforcement Schedule that predictably reinforces an Operant Behavior based upon the amount of time that's passed
 
-;;;Involuntary Behavior;;A type of Behavior that an agent cannot control. The opposite of Voluntary Behavior;;;Extinction;;The process of reducing a response
+The opposite of Variable Ratio Schedule in the variable which dictates reinforcement, which is based on the amount of time, not the amount of behavior
+The opposite of Variable Interval Schedule in the consistency of time between reinforcement, which stays the same instead of changing;;;Bottom-up processing;;A type of information processing which starts by analyzing the most basic units of information, such as individual letters or numbers, and then gaining more knowledge about these units by abstracting out more general information;;;Color Constancy;;a type of Perceptual Constancy defined as the ability to recognize objects as having the same color despite variations in the color of the light that falls on them;;;Amnesia;;The partial or complete loss of Short-term Memory or Long-term Memory;;;Closure;;In Gestalt Psychology, the tendency for Agents to make up missing information in images or sounds
 
-1. In Classical Conditioning 
+One of the Gestalt Principles of Organization 
+Also called law of closure; principle of closure;;;Negative Reinforcement;;In Operant Conditioning, a type of Reinforcement that removes an undesirable Stimulus after an Agent demonstrates the Operant Behavior
+
+;;;Involuntary Behavior;;A type of Behavior that an agent cannot control
+
+The opposite of Voluntary Behavior;;;Extinction;;The process of reducing a response
+
+1. In Classical Conditioning:
 	1. The decrease in strength of a Conditioned Response
 	2. Caused by presenting only the Conditioned Stimulus or Unconditioned Stimulus
 
-2. In  Operant Conditioning 
+2. In  Operant Conditioning:
 	1. The reduction in frequency of an Operant Behavior
 	2. Caused by withholding Reinforcement;;;Mission statement;;increase energy
 - avoid simple sugars when possible 
-		simple sugars reduce orexin, causing drowsiness & decreasing attention
+		simple sugars reduce Orexin, causing drowsiness & decreasing attention
  - eat towards end of day
-		  food increases glucose, which reduces orexin leveles
+		  food increases glucose, which reduces Orexin leveles
  - wake up consistently
 		consistent sleep/wake cycles optimize circadian rhythm, increasing next-day consciousness
 - exercise in the mornings
-		morning cardiovascular & muscular increases orexin production, releases endorphins, strenghenes skeletal system & muscles, and makes skin look prettier
+		morning cardiovascular & muscular increases Orexin production, releases endorphins, strenghenes skeletal system & muscles, and makes skin look prettier
 		
 decrease stress
 - apply daily and weekly Scheduling
-- ;;;Hierarchy of Needs;;A theory proposed by Abraham Maslow  that organized desire into a hierarchy
+- ;;;Hierarchy of Needs;;A theory that desires follow a hierarchy
+Proposed by Abraham Maslow in (1943)
 
-In order of importance:
-	1. Physiological Needs - Biological needs: Water, Food, Sleep
-2. Safety - Psychological needs: Shelter, Feeling of control over environment
+Hierarchy (in order of importance)
+1. Physiological Needs (Biological needs: Water, Food, Sleep, Shelter)
+2. Safety
 2. Belonging and Love 
-3. Self-Esteem
+3. Self-Esteem (Appreciation from community)
 4. Self-Actualization
-
-(1943);;;Implicit Memory;;A type of Long-term Memory that cannot be consciously recalled but still has the capacity to influence behavior. For example, muscle memory. 
+;;;Implicit Memory;;A type of Long-term Memory that cannot be consciously recalled but still has the capacity to influence behavior. For example, muscle memory. 
 
 The opposite of Explicit Memory in terms of consciousness
 The opposite of Amnesia in terms of unconscious influence on behavior
@@ -213,21 +225,17 @@ Policy Governance
 ;;;Mary Whiton Calkins;;First woman to be elected president of the American Psychological Association
 
 (1863 - 1930) - United States
-One of the Major Historical Psychological Figures;;;Acquisition;;In Classical Conditioning, the stage of Learning where a Neutral Stimulus becomes a Conditioned Stimulus through repeated pairings with an Unconditioned Stimulus. The equivalent of Shaping in Operant Conditioning
-;;;Continuous Reinforcement;;In Operant Conditioning, a type of Reinforcement that always reinforces an Agent for demonstrating the Operant Behavior;;;Untitled 2;;School improvement plans (SIP)
+One of the Major Historical Psychological Figures;;;Acquisition;;In Classical Conditioning, the stage of Learning where a Neutral Stimulus becomes a Conditioned Stimulus through repeated pairings with an Unconditioned Stimulus
 
-Data provided interventions per student & effect on testing scores? 
-
-With data, should be possible to identify teachers & departments that cause increase in scores, why are they not involved in action plans or school improvement plans. ;;;NADPH;;An electron carrier that transfers energy from Photosystem I within the Light Reactions / Light Dependent Reactions to the Dark Reactions / Calvin Cycle / Light Independent Reactions;;;Edward Titchener;;Student of Wilhelm Wundt and is associated with Structuralism
+The equivalent of Shaping in Operant Conditioning
+;;;Continuous Reinforcement;;In Operant Conditioning, a type of Reinforcement that always reinforces an Agent for demonstrating the Operant Behavior;;;NADPH;;An electron carrier that transfers energy from Photosystem I within the Light Reactions / Light Dependent Reactions to the Dark Reactions / Calvin Cycle / Light Independent Reactions;;;Edward Titchener;;Student of Wilhelm Wundt and is associated with Structuralism
 Invented Introspection
 
-(1867 - 1927) | Lived in Germany, then United States;;;Unconditioned Response;;A type of unlearned Response within Classical Conditioning that occurs involuntarily. For example, flinching. ;;;Positive Punishment;;In Operant Conditioning, a type of Reinforcement that adds a desirable Stimulus after an Agent demonstrates the Operant Behavior
+(1867 - 1927) | Lived in Germany, then United States;;;Unconditioned Response;;A type of Response within Classical Conditioning that is unlearned and occurs involuntarily;;;Positive Punishment;;In Operant Conditioning, a type of Reinforcement that adds a desirable Stimulus after an Agent demonstrates the desired Operant Behavior
 
+;;;Differential Reinforcement;;Within Operant Conditioning, a method of Reinforcement which ALWAYS rewards some Behavior, but not behavior that differs in a specified way
 
-
-;;;Differential Reinforcement;;Within Operant Conditioning, a method of Reinforcement which rewards a subset of Behavior
-
-For example, reinforcing a dog for raising their left paw, but not their right. Or, reinforcing a dog for raising either paw when an experimentor's right hand is extended but not their right hand. ;;;relative size;;the size of an object in comparison to other objects in the scene;;;Observational Learning;;A type of Learning where an agent observes the behavior of other agents;;;Cognitive Map;;The Agent's stored representation of their environment;;;Comparison of Positive & Negative Reinforcement;;Similarities between Positive Reinforcement and Negative Reinforcement:
+For example, reinforcing a dog for raising their left paw, but not their right. Or, reinforcing a dog for raising either paw when an experimenter's right hand is extended but not their right hand. ;;;relative size;;the size of an object in comparison to other objects in the scene;;;Observational Learning;;A  type of Learning where an agent observes the behavior of other agents, then mimics their behavior;;;Cognitive Map;;The Agent's stored representation of their environment;;;Comparison of Positive & Negative Reinforcement;;Similarities between Positive Reinforcement and Negative Reinforcement:
 1. Increase the frequency / probability of an Operant Behavior
 2. A part of Operant Conditioning
 
@@ -241,33 +249,34 @@ Differences between positive reinforcement and negative reinforcement:
 	2. Negative reinforcement - Stimulus is removed
 
 ;;;Photosynthesis & Cellular Respiration Equations;;Within plants, mesophyll cells contain Chloroplasts;;;Retrograde Amnesia;;In Learning, the condition where an Animal is unable to form new  Short-term Memories or Long-term Memories
-The opposite of amnesia
-;;;Edward Tolman;; Behaviorist, Cognitive Map with maze experiments involving rats
 
-;;;Convergence;; the rotation of the two eyes inward toward a light source so that the image falls on corresponding points on the foveas. Convergence enables the slightly different images of an object seen by each eye to come together and form a single image. The muscular tension exerted is also a cue to the distance of the object from the eyes.;;;Autokinetic Effect;;An Optical Illusion 
+The opposite of Anterograde Amnesia
+;;;Edward Tolman;; Behaviorist who demonstrated Latent Learning  with maze experiments involving rats
+One of the first to demonstrate the existence of a Cognitive Map;;;Convergence;;
+The pressure a binocular Animal feels during the process of rotating their eyes inward to view an object, which is used as a Binocular Depth Cue;;;Autokinetic Effect;;An Optical Illusion where fixed points appear to move after a period of staring due to eye fatigue;;;Operant Conditioning;;In Psychology, a Theory of Associative Learning where the frequency of an agent's Voluntary Behavior is increased or decreased through Reinforcement
 
-where fixed points appear to move after a period of staring due to eye fatigue;;;Operant Conditioning;;Function - Associative Learning
-Form - In Psychology, Scientific Theory of Learning where the frequency of an agent's Voluntary Behavior is increased or decreased through Reinforcement according to the Law of Effect
-
-1. An agent demonstrates some Behavior, called the Operant Behavior in response to some Stimulus, called the Discriminative Stimulus
-2. The agent's operant behavior is then reinforced or punished, called Reinforcement or Punishment
+1. An agent demonstrates some desired or undesired Behavior (called the Operant Behavior) in response to some Stimulus  (called the Discriminative Stimulus)
+2. The agent's operant behavior is then reinforced or punished (called Reinforcement or Punishment)
 3. As a result of consequences, the agent adjusts how likely OR how often it demonstrates the behavior
 
 First described by B. F. Skinner
-Typically associated with Edward Thorndike;;;Empathy;;The process of describing and demonstrating an understanding of the needs, interests, and perspectives of a counterpart without neccessarily agreeing
+Typically associated with Edward Thorndike;;;Empathy;;The process of describing and demonstrating an understanding of the needs, interests, and perspectives of a counterpart without necessarily agreeing. It is not about liking or sympathy. https://www.masterclass.com/articles/how-to-use-tactical-empathy-to-negotiate#how-to-use-tactical-empathy-in-negotiations;;;Respondent Behavior;;When presented with a Stimulus, the type of Response that occurs automatically. The opposite of Operant Behavior;;;Voluntary Behavior;;A type of Behavior that an agent can consciously control
 
-It is not about liking or sympathy
+The opposite of Involuntary Behavior in terms of the state of mind which governs the behavior;;;Valid Test;;A test that has has withstood Peer Review;;;Explicit Memory;;A type of Long-term Memory that can be consciously recalled. For example, the memory of a day's events
 
-https://www.masterclass.com/articles/how-to-use-tactical-empathy-to-negotiate#how-to-use-tactical-empathy-in-negotiations;;;Respondent Behavior;;When presented with a Stimulus, the type of Response that occurs automatically. The opposite of Operant Behavior;;;Voluntary Behavior;;A type of Behavior that an agent can consciously control. The opposite of Involuntary Behavior;;;Valid Test;;A test that has has withstood Peer Review;;;Explicit Memory;;A type of Long-term Memory that can be consciously recalled. For example, the memory of a day's events
-
-The opposite of Implicit Memory;;;Aristotle;;Believed that Knowledge should be derived through experimentation
+The opposite of Implicit Memory in terms of the part of the mind that access the memory
+;;;Inductive Reasoning;;In Philosophy,  a type of reasoning;;;Aristotle;;Believed that Knowledge should be derived through experimentation
 
 Student of Plato
-Teacher of Socrates;;;Recall;;In Memory, the ability to accurately describe an Explicit Memory;;;Sigmund Freud;;Inventor of the Psychoanalytic or Psychodynamic Model model
+Teacher of Socrates;;;Recall;;In Memory, the ability to accurately describe an Explicit Memory
+
+The opposite of Recognition in terms of the strength of the memory;;;Sigmund Freud;;Inventor of the Psychoanalytic or Psychodynamic Model model
 
 (1856 - 1939) - Vienna
 One of the Major Historical Psychological Figures;;;Coping Mechanism;;In Coping, a strategy used to alleviate Stress
-;;;Similarity;;one of the Gestalt Principles of Organization which states that people tend to organize objects with similar qualities into a perceptual group and interpret them as a whole;;;Behavior;;The action of an Agent in response to an internal or external Stimulus;;;linear perspective;;one of the Monocular Depth Cue, arising from the principle that the size of an object’s visual image is a function of its distance from the eye. Thus, two objects appear closer together as the distance from them increases, as seen in the tracks of a railroad that appear to converge on the horizon.;;;Shaping;;Within Operant Conditioning, the process of producing Behavior which increasingly approximates a desired behavior using Reinforcement. The equivalent of Acquisition in Classical Conditioning;;;Theoretical Psychological Approaches;;Structuralism
+;;;Similarity;; The tendency for people to view similar objects as the same object
+
+  One of the Gestalt Principles of Organization;;;Behavior;;The action of an Agent in response to an internal or external Stimulus;;;linear perspective;;In Gestalt Psychology, a Monocular Depth Cue that relies on the distance between objects. Objects that are more distant on the Retina are seen as closer to the Animal, while objects that are closer on the Retina are seen as further from the Animal;;;Shaping;;Within Operant Conditioning, the process of producing the desired Operant Behavior by only Reinforcing Behavior which is closer to the desired Operant Behavior than the previously reinforced behavior;;;Theoretical Psychological Approaches;;Structuralism
 Functionalism
 Early Behaviorism
 Gestalt Psychology
@@ -277,9 +286,9 @@ Evolutionary Approach
 Biological Approach
 Cognitive Approach
 Biopsychosocial Approaches
-Sociocultural;;;Phi Phenomenon;;A Perceptual Constancy
+Sociocultural;;;Phi Phenomenon;;A form of Perceptual Constancy where motion is perceived between stationary stimuli (lights flashing in series, crowd doing the wave)
 
-Characterized by the perception of motion between seperate stationary stimuli (lights flashing, crowd waving) ;;;Types of Reinforcement;;To determine which type of reinforcement applies, examine the consistency and result of reinforcement
+The opposite of Stroboscopic Motion in the movement of the stimuli (stationary) and the movement of the illusion (moving);;;Types of Reinforcement;;To determine which type of reinforcement applies, examine the consistency and result of reinforcement
 
 Consistency:
 1. Every time - Continuous Reinforcement
@@ -288,22 +297,25 @@ Consistency:
 Result:
 1. Increase in frequency of behavior - Positive Reinforcement
 2. Decrease in frequency of behavior - Negative Reinforcement
-;;;Early Behaviorism;;One of the Theoretical Psychological Approaches that asserts psychology should be objective by focusing entirely on measurable Behavior and stimuli (see Stimulus)
+;;;Early Behaviorism;;One of the Theoretical Psychological Approaches that asserts psychology should be objective by focusing entirely on measurable Behavior and Stimuli
 
 Founded by John B. Watson;;;Gestalt Principles of Organization;;These principles are organized into five categories: Proximity, Similarity, Continuity, Closure, Ambiguity, and Figure Ground. Gestalt psychologists argued that these principles exist because the mind has an innate disposition to perceive patterns in the stimulus based on certain rules. ;;;Abraham Maslow;;Founded Humanistic Psychology, a theory that proposed the Hierarchy of Needs to explain Motivation and Personality
 
-(1908 - 1970) - United States;;;Neutral Stimulus;;A type of Stimulus that does not produce a Response;;;Amnesia  or Antereograde Amnesia;;The partial or complete loss of Memory
+(1908 - 1970) - United States;;;Neutral Stimulus;;A type of Stimulus that does not produce a Response
 
-It can be the loss of Short-term Memory or Long-term Memory;;;Perceptual Organization;;the process of organizing visual stimuli into distinct, comprehendible entities according to the Gestalt Psychology using Monocular Depth Cue, Binocular Depth Cues, Top-down processing, and Bottom-up processing
-;;;edge detection;;the process of identifying edges within visual information;;;Biofeedback;;A theory about Operant Conditioning that an Animal Agent can be conditioned to control some part of their Autonomic Nervous System
+The opposite of a Conditioned Stimulus in Classical Conditioning in the Response it produces;;;Perceptual Organization;;the process of organizing visual stimuli into distinct, comprehendible entities according to the Gestalt Psychology using Monocular Depth Cue, Binocular Depth Cue, Top-down processing, and Bottom-up processing
+;;;Edge Detection;;The process of identifying edges within visual information;;;Biofeedback;;A theory about Operant Conditioning that an Animal Agent can be conditioned to control some part of their Autonomic Nervous System. In this theory, the Discriminative Stimulus is information about the Autonomic Nervous System and any bodily Stimulus;;;Unconscious Processes;;Cognitive processes that happen without conscious awareness;;;Ambiguity;;One of the Gestalt Principles of Organization which states that humans will create information when presented with ambiguous Stimuli;;;Little Albert Experiment;;An experiment conducted by John B. Watson where **baby Albert** was classically conditioned to fear white furry objects through the conditioned stimulus of a loud sound;;;Recognition;;In Memory, the ability to identify a concept or object that has been Explicitly Stored
 
-In this theory, the Discriminative Stimulus is information about the Autonomic Nervous System and any bodily Stimulus;;;Ambiguity;;One of the Gestalt Principles of Organization which states that humans are able to recognize ambiguity, but will try to avoid it using the other principles of organization when possible. ;;;Little Albert Experiment;;An experiment conducted by John B. Watson where **baby Albert** was classically conditioned to fear white furry objects through the conditioned stimulus of a loud sound;;;Recognition;;In Memory, the ability to identify a concept or object that has been Explicitly Stored;;;Spontaneous Recovery;;In Classical Conditioning, when an Agent demonstrates a previously extinguished Conditioned Response
+The opposite of Recall in the strength of the Memory;;;Spontaneous Recovery;;In Classical Conditioning, when an Agent demonstrates a previously extinguished Conditioned Response
 
 In Operant Conditioning, when an agent demonstrates a previously extinguished Operant Behavior
 
 ;;;Structuralism;;The belief that understanding the individual components of the mind would create an understanding of the whole mind
 
-;;;interposition;;a monocular cue where one object obscures part of another image which requres edge detection;;;Validity;;In Scientific Research, the effectiveness of a Test in measuring its Construct
+The opposite of Functionalism in the focus on the individual components of the mind rather than the function of the mind as a whole
+
+Associated with Edward Titchener and Wilhelm Wundt 
+;;;interposition;;A Monocular Depth Cue where an Agent perceives depth through the position of one object in front of another. This depth cue requires Edge Detection;;;Validity;;In Scientific Research, the effectiveness of a Test in measuring its Construct
 
 A test's validity can be critiqued in multiple ways by criticizing each type of validity:
 1. Criterion Validity 
@@ -317,21 +329,21 @@ Face validity:
 (1896 - 1980) - Switzerland
 One of the Major Historical Psychological Figures;;;Punishment;;Within Operant Conditioning, a Reinforcing Stimulus that decreases the frequency of an Operant Behavior
 
-The opposite of Reinforcement;;;G. Stanley Hall;;First president of the APA
+The opposite of Reinforcement in the negative response rather than a positive response;;;G. Stanley Hall;;First president of the APA
 Established the first Psychology laboratory in the United States
 
 (1844 - 1924) - United States
 One of the Major Historical Psychological Figures;;;Variable Interval Schedule;;In Operant Conditioning, a Reinforcement Schedule that unpredictably reinforces an Operant Behavior based upon the amount of time that's passed;;;Ivan Pavlov;;Discovered Classical Conditioning through is work with dogs
 
-Laid the foundation for John B. Watson who formally promoted Early Behaviorism;;;shading effects;;the way light falls on an object;;;Response;;An agent's measurable Behavior when exposed to a Stimulus;;;Brightness Constancy;;a Perceptual Constancy defined as 
+Laid the foundation for John B. Watson who formally promoted Early Behaviorism;;;shading effects;;the way light falls on an object;;;Response;;An agent's measurable Behavior when exposed to a Stimulus;;;Functionalism;;
+The opposite of Structuralism in the focus on the function of the mind as a whole rather than the individual components of the mind;;;Brightness Constancy;;a Perceptual Constancy defined as 
 
 the tendency to perceive a familiar object as having the same brightness under different conditions of illumination. Also called lightness constancy
-;;;orexin;;neurotransmitter associated with wakefulness
+;;;Orexin;;Neurotransmitter associated with wakefulness which is released released in the presence of  ghrellin;;;Variable Ratio Schedule;;In Operant Conditioning, a Reinforcement Schedule that unpredictably reinforces the Operant Behavior based upon the amount of Operant Behavior;;;B. F. Skinner;;A radical behaviorist that invented the Operant Chamber and studied Operant Conditioning, specifically Reinforcement Schedules
 
-released by ghrellin and hypoglycemia;;;Intrinsic Motivation 1;;In Operant Conditioning, the anticipation of an internal Stimulus
-
-The opposite of Extrinsic Motivation 1;;;Variable Ratio Schedule;;In Operant Conditioning, a Reinforcement Schedule that unpredictably reinforces an Operant Behavior based upon the number of  operant behavior repetitions;;;B. F. Skinner;;A radical behaviorist that invented the Operant Chamber and studied Operant Conditioning, specifically Reinforcement Schedules
-;;;Experience;;A Stimulus that resulted in an Agent learning;;;Peer Review;;The evaluation of work by one or more people which results in the approval or denial of inclusion in a Scientific Journal ;;;Law of Effect;;A principle of Edward Thorndike that states Operant Behavior with a favorable Reinforcing Stimulus will increase in frequency while operant behavior with an unfavorable Reinforcing Stimulus will decrease in frequency;;;Memory Formation;;
+(1904 - 1990) - United States
+;;;Experience;;The amount and quality of the Implicit Memories and Explicit Memories accrued by an Agent
+;;;Peer Review;;The evaluation of work by one or more people which results in the approval or denial of inclusion in a Scientific Journal ;;;Law of Effect;;A principle of Edward Thorndike that states Operant Behavior with a favorable Reinforcing Stimulus will increase in frequency while operant behavior with an unfavorable Reinforcing Stimulus will decrease in frequency;;;Memory Formation;;
 2 types:
 
 Automatic|Effortful
@@ -340,19 +352,12 @@ Implicit memory|Explicit Memory
 Processed in Cerebellum & Basal Ganglia | Processed in Hippocampus & Frontal Lobes
 
 
-;;;Sensory Adaptation;;A gradual decrease in Somatic Nervous System (SNS) response to a repeated stimulus. The SNS counterpart to Habituation;;;Psychology;;The study of the Brain and Behavior
+;;;Sensory Adaptation;;A gradual decrease in Somatic Nervous System (SNS) response to a repeated stimulus.
 
-Emerged from Philosophy;;;hypoglycemia;;the state of low glucose in blood;;;Shape Constancy;;a type of Perceptual Constancy defined as 
-
-the tendency for an object to be perceived as the same shape after rotation;;;Fixed-ratio Schedule;;In Operant Conditioning, a Reinforcement Schedule that predictably reinforces the Operant Behavior based upon the number of operant behavior repetitions;;;Size Constancy;;a type of Perceptual Constancy defined as the ability to perceive an object as being the same size despite the fact that the size of its retinal image changes depending on its distance from the observer.;;;Psychoanalytic or Psychodynamic Model;;Theory that differentiates between Conscious Mental Processes and  Unconscious Mental Processes which emphasizes the importance of Childhood and parental relationships. 
+The opposite of Habituation in terms of the part of the body responsible for the response, which is the Somatic Nervous System, not the Autonomic Nervous System;;;Psychology;;The study of the Brain and Behavior;;;hypoglycemia;;the state of low glucose in blood;;;Shape Constancy;; The tendency for an object to be perceived as the same shape after translation. A Perceptual Constancy;;;Fixed-ratio Schedule;;In Operant Conditioning, a Reinforcement Schedule that predictably reinforces the Operant Behavior based upon the number of operant behavior repetitions;;;Size Constancy;;The tendency to perceive an object as being the same size despite the fact that the size of its retinal image changes depending on its distance from the observer. A type of Perceptual Constancy;;;Psychoanalytic or Psychodynamic Model;;Theory that differentiates between Conscious Mental Processes and  Unconscious Mental Processes which emphasizes the importance of Childhood and parental relationships
 
 Behavior is described and predicted in terms of the Id, Ego, and Superego
-;;;Classical Psychological Perspectives;;Structuralism -  
-Functionalism
-Psychoanalytic or Psychodynamic Model
-Early Behaviorism
-Humanistic
-;;;Stimulus;;Any perceptible change that causes an agent to produce a Response;;;Binocular Depth Cues;;visual cues used to judge the distance of an object such as Retinal Disparity and Convergence which create Depth Cues;;;Negative Punishment;;In Operant Conditioning, a type of Reinforcement that removes an undesirable Stimulus after an Agent demonstrates the Operant Behavior
+;;;Stimulus;;Any perceptible change that causes an agent to produce a Response;;;Negative Punishment;;In Operant Conditioning, a type of Reinforcement that removes an undesirable Stimulus after an Agent demonstrates the Operant Behavior
 
 ;;;Flashbulb Memory;;A vivid, Long-term Memory that was created during a surprising event
 1. As a result of surprising Stimuli, the surprised parts of the Brain excite the Amygdala through unknown means
@@ -415,11 +420,13 @@ Differences between positive punishment and negative punishment:
 
 2. Action of stimulus:
 	1. Positive punishment - Stimulus is added
-	2. Negative punishment - Stimulus is removed;;;Books;;The Art of Governing Coherently;;;Inductive Reasonin;;In Philosophy,  a type of reasoning ;;;Operant Chamber;;A device which contains a measurement device and a form of Reinforcement that is used for Operant Conditioning through Shaping
+	2. Negative punishment - Stimulus is removed;;;Books;;The Art of Governing Coherently;;;Operant Chamber;;A device which contains a measurement device and a form of Reinforcement that is used for Shaping (a type of Operant Conditioning). Developed by B. F. Skinner;;;Operant Behavior;;In Operant Conditioning, any behavior that an Agent demonstrates in response to the Discriminative Stimulus whose frequency is affected by consequences
 
-Developed by B. F. Skinner;;;Operant Behavior;;In Operant Conditioning, any behavior that an Agent demonstrates in response to the Discriminative Stimulus whose frequency is affected by Consequences. The equivalent of a Conditioned Response in Classical Conditioning;;;Discriminative Stimulus;;The type of Stimulus within Differential Reinforcement that increases the frequency of Response
+The equivalent of a Conditioned Response in Classical Conditioning;;;Discriminative Stimulus;;The type of Stimulus within Differential Reinforcement that increases the frequency of Response
 
-The opposite of a Negative Discriminative Stimulus;;;Relearning;;In Memory, the process of Learning an Implicit Memory or Explicit Memory which has been Forgotten;;;Modus Operendi;;Maximize pleasure
+The opposite of a Negative Discriminative Stimulus;;;Extrinsic Motivation;;In Operant Conditioning, the anticipation of an external Stimulus 
+
+The opposite of Intrinsic Motivation;;;Relearning;;In Memory, the process of Learning an Implicit Memory or Explicit Memory which has been Forgotten;;;Modus Operendi;;Maximize pleasure
 
 2 classes of pleasure:
 1. Internally generated
@@ -432,6 +439,12 @@ The 3 types of pleasure (in order of sustainability):
 
 
 4. Intrinsic - Consciously overcoming prior limitations for its own sake
-		 - Applying ;;;Habituation;;The gradual decrease in Central Nervous System (CNS) response to a repeated stimulus. The CNS counterpart to Sensory Adaptation;;;Plato;;Believed that Knowledge should be derived through Logic
+		 - Applying ;;;Habituation;;The gradual decrease in Central Nervous System (CNS) response to a repeated stimulus
 
-Student of Socrates;;;Stroboscopic Motion;;An Optical Illusion where an object is flashed in slightly different positions which creates the illusion of motion;;;Edward Thorndike;;Discovered Operant Conditioning, responsible for the Law of Effect;;;
+The CNS counterpart to Sensory Adaptation;;;Antereograde Amnesia;;The partial or complete loss of the ability to form Memories
+
+It can be the inability to form Short-term Memories or Long-term Memories;;;Plato;;Believed that Knowledge should be derived through Logic
+
+Student of Socrates;;;Stroboscopic Motion;;An Optical Illusion where an object is flashed in slightly different positions which creates the illusion of motion
+
+The opposite of the Phi Phenomenon in the movement of the stimuli (moving) and the movement of the illusion (stationary);;;Edward Thorndike;;Discovered Operant Conditioning, responsible for the Law of Effect;;;
