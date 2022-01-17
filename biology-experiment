@@ -1,0 +1,80 @@
+import os
+import re
+from titlecase import titlecase
+
+
+dataset = "/Users/reed/Documents/Nightly/bio test set.txt"
+directory = "/Users/reed/Library/Mobile Documents/iCloud~md~obsidian/Documents/biology test"
+
+def user_input(prompt, responses, error_message): # Ask the user a question and return their response
+    while True:
+        x = input(prompt)
+        if x in responses:
+            return x
+        elif x == 'q':
+            quit()
+        else:
+            print(error_message)
+            continue
+
+
+def titlecase_plus(string): # run the string through titlecase but allow for acronyms
+    split_on_space = re.split('\s+', string) # split the string on spaces
+    acronyms = []
+    for i in range(len(split_on_space)): 
+        if split_on_space[i].upper() == split_on_space[i]: # if the word is all caps, add it to the acronyms list
+            length = len(split_on_space[i])
+            start = string.find(split_on_space[i])
+            acronyms.append([start, start + length, split_on_space[i]])
+        
+    string_titlecase = titlecase(string)
+    for i in acronyms: # replace the acronyms with the original capitalization
+        string_titlecase = string_titlecase[:i[0]] + i[2] + string_titlecase[i[1]:]
+
+    return string_titlecase
+
+
+def make_directory(path, file):
+    # read the file and save it to a list called contents
+    with open(dataset, 'r') as f:
+        contents = f.read()
+    
+    # the file is a list of terms and definitions seperated by ';;' and ';;;' respectively
+    # split the contents into a list of lists
+    contents = contents.split(';;;')
+    # subdivide contents by ';;'
+    contents = [x.split(';;') for x in contents]
+    
+    # format the contents of the list
+    for i in range(len(contents)):
+        # try to check the length of the definition
+        try:
+            if len(contents[i][1]) > 1:
+                true_title = titlecase_plus(contents[i][0])
+                title = titlecase_plus(contents[i][0]) # titlecase the term
+                if true_title != title: 
+                    input(f'"{true_title}" is not titlecase, it is "{title}". Press enter to continue.')
+                definition = contents[i][1][0].upper() + contents[i][1][1:] # capitalize the first letter of the contents
+                # create a markdown file for each term
+                # write the term and definition to the file
+                with open(directory + "/" + title + ".md", "w") as f:
+                    f.write(definition)
+                print(title + " created")
+        except IndexError:
+            print(f"'IndexError' on line {i}")
+            
+
+
+
+
+    # create a markdown file for each term
+
+
+def main():
+    response = user_input('Has the test set been read? (Y/n)\n', ['y', 'n', ''], 'Please enter a command')
+    if response == 'y' or response == "":
+        pass
+    else:
+        make_directory(directory, dataset)
+
+main()
