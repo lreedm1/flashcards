@@ -75,6 +75,7 @@ def make_directory(path, file):
             title = title[0].upper() + title[1:]
         
         definition = contents[i][1]
+        definition = definition[0].upper() + definition[1:] # capitalize the first letter
         if definition[-1] == ".": # if definition ends with a period, remove it
             definition = definition[:-1]
 
@@ -147,9 +148,11 @@ def make_connections(terms):
                 continue
             for k in normalized_terms_list[i]:
                 # add spaces to the beginning and end of the term to make sure the term is found in the definition
+                m = " " + k + "s "
                 k = " " + k + " "
+                
                 l = " " + str(normalized_definitions_list[j]) + " "
-                if l.find(k) != -1:
+                if l.find(k) != -1 or l.find(m) != -1:
                     term_connections.append([i, j])
                     break
 
@@ -168,7 +171,7 @@ def make_connections(terms):
     # add the connections to the terms
     for i in range(len(connections_list)):
         print(f'{connections_list[i]}')
-        terms[connections_list[i][0]][1] += '\nReferences:'
+        terms[connections_list[i][0]][1] += '\n\nReferences:\n'
         for j in range(len(connections_list[i][1])):
 
             terms[connections_list[i][0]][1] += f" [[{terms[connections_list[i][1][j]][0]}]]"
@@ -208,7 +211,7 @@ def weight(cards, dictionary, directory):
         for j in range(len(word_list[i][0])):
             words.append(word_list[i][0][j].lower())
     # remove puncuation from the words list
-    punctuation = string.punctuation
+    punctuation = punctuation.punctuation
     for i in range(len(words)):
         for j in punctuation:
             words[i] = words[i].replace(j, "")
