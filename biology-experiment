@@ -1,9 +1,12 @@
+from itertools import count
 import os
 import re
 from titlecase import titlecase
+import string
 
 
 dataset = "/Users/reed/Documents/Nightly/bio test set.txt"
+dictionary = "/Users/reed/Documents/Nightly/dictionary.txt"
 directory = "/Users/reed/Library/Mobile Documents/iCloud~md~obsidian/Documents/biology test"
 
 def user_input(prompt, responses, error_message): # Ask the user a question and return their response
@@ -41,40 +44,181 @@ def make_directory(path, file):
     
     # the file is a list of terms and definitions seperated by ';;' and ';;;' respectively
     # split the contents into a list of lists
-    contents = contents.split(';;;')
+    # first, replace all empty terms with '*****'
+    contents = contents.replace(';;;;;', '*****')
+    contents = contents.split(";;;")
     # subdivide contents by ';;'
     contents = [x.split(';;') for x in contents]
     
     # format the contents of the list
     for i in range(len(contents)):
-        # try to check the length of the definition
+        # print the contents to make sure regex is working
         try:
-            if len(contents[i][1]) > 1:
-                true_title = titlecase_plus(contents[i][0])
-                title = titlecase_plus(contents[i][0]) # titlecase the term
-                if true_title != title: 
-                    input(f'"{true_title}" is not titlecase, it is "{title}". Press enter to continue.')
-                definition = contents[i][1][0].upper() + contents[i][1][1:] # capitalize the first letter of the contents
-                # create a markdown file for each term
-                # write the term and definition to the file
-                with open(directory + "/" + title + ".md", "w") as f:
-                    f.write(definition)
-                print(title + " created")
+            # if the contents are less than two characters or contain the code "*****", skip the term
+            if len(contents[i][1]) < 2 or "*****" in contents[i][1] or "*****" in contents[i][0]:
+                print(f'{contents[i]} is to short or got flagged for being blank')
+                continue
         except IndexError:
-            print(f"'IndexError' on line {i}")
+            print(f'{contents[i]} is too short')
+            continue # skip the code below the try
+        title = titlecase_plus(contents[i][0]) # titlecase the term
+        title = title.replace("/", "or") # replace slashes with 'or'
+        definition = contents[i][1][0].upper() + contents[i][1][1:] # capitalize the first letter of the contents
+        if definition[-1] == ".": # if definition ends with a period, remove it
+            definition = definition[:-1]
+
+        print(title + " created")
+        saved_contents = list([])
+        saved_contents.append([title, definition]) 
+        # create a card for each term
+        # it is not written to disk until write_cards is called
+        
+        # convert saved_contents to a tuple so it is not overwritten
+        saved_contents = tuple(saved_contents)
+
+    return saved_contents
+
+def make_connections(terms):
+    terms = list(terms)
+    print(f'terms2: {terms}')
+    for i in range(len(terms)):
+        term_lower_1 = terms[i][0]
+        if term_lower_1[-1] == "s": # if the term ends with 's', remove the 's'
+            term_lower_1 = term_lower_1[:-1]
+        print(term_lower_1)
+        term_lower_1 = " " + term_lower_1.lower() + " " # spaces added to prevent inter-word matches
+        
+
+        term_1 = terms[i][0]
+
+        for j in range(len(terms)):
+            if j == i:
+                continue
+
+            term_lower_2 = terms[j][0]
+            if term_lower_2[-1] == "s": # if the term ends with 's', remove the 's'
+                term_lower_2 = term_lower_2[:-1]
+            term_lower_2 = " " + term_lower_2.lower() + " " # remove spaces from the term
             
+            
+            definition_lower_2 = " " + terms[j][1].lower() 
+            # if the definition does not contain a references section, add a space to the end to allow last-word matches
+            if "references" not in definition_lower_2:
+                definition_lower_2 = definition_lower_2 + " "
+            for i in string.punctuation: # remove all punctuation from the definition
+                definition_lower_2 = definition_lower_2.replace(i, " ")
+
+            definition_2 = terms[j][1]
+
+            
+            if term_lower_1 in definition_lower_2 or term_lower_1 + "s" in definition_lower_2: 
+                if not "References" in definition_2: 
+                        definition_2 = definition_2 + "\n\nReferences\n"
+                definition_2 = definition_2 + f'[[{term_1}]] '
+                terms[j][1] = definition_2
+    return terms
+        
+def weight(cards, dictionary, directory): 
+    # convert cards (which is a tuple) to a list of lists called word_list
+    x = cards
+    word_list = list(cards)
+
+    with open(dictionary, 'r') as f:
+        dictionary = f.read()
+
+    # every few lines, the dictionary contains a line that starts with "#! comment", remove those lines
+    dictionary = [x for x in dictionary.split("\n") if not x.startswith("#!")]
+    # lowercase all words in the dictionary
+    for i in range(len(dictionary)):
+        dictionary[i] = dictionary[i].lower()
+
+   # turn terms into a list of words, and use terms to make a count of how often each word appears
+    words = []
+    for i in range(len(word_list)):
+        # split all of terms [i][1] into a list of words and add them to the words list
+        word_list[i][0] = word_list[i][0].split(" ")
+        word_list[i][1] = word_list[i][1].split(" ")
+
+        for j in range(len(word_list[i][1])):
+            words.append(word_list[i][1][j].lower())
+        for j in range(len(word_list[i][0])):
+            words.append(word_list[i][0][j].lower())
+    # remove puncuation from the words list
+    punctuation = string.punctuation
+    for i in range(len(words)):
+        for j in punctuation:
+            words[i] = words[i].replace(j, "")
+
+    word_list = []
+    count = []
+    for i in range(len(words)):
+        if words[i] not in word_list:
+            word_list.append(words[i])
+            count.append(1)
+        else:
+            count[word_list.index(words[i])] += 1
 
 
+    # zip terms and count together, and sort by count
+    terms_counted = list(zip(word_list, count))
+    terms_counted.sort(key=lambda x: x[1], reverse=True)
+
+    # turn the terms_counted list into a dictionary
+    message = ""
+
+    message += "The most common words are:\n"
+    # add the terms to the message with their counts surrounded by parentheses
+    for i in range(len(terms_counted)):
+      message += f'({terms_counted[i][0]}, {terms_counted[i][1]}) '
+
+    terms_in_dictionary = []
+    for i in range(len(terms_counted)):
+        if terms_counted[i][0] in dictionary:
+            terms_in_dictionary.append(terms_counted[i][0])
+    
+    message += "\n\nThe most common words from this set in the dictionary are:\n"
 
 
-    # create a markdown file for each term
+    # write the terms_counted to a file called 'card_statistics.md'
+    with open(directory + '/card_statistics.md', 'w') as f:
+        f.write(message)
 
+    return x
+    
+
+
+def read_directory(directory):
+    terms = []
+    for filename in os.listdir(directory):
+        with open(directory + "/" + filename, 'r') as f:
+            contents = f.read()
+        terms.append([filename[:-3], contents])
+    return terms
+
+def write_cards(cards, directory):
+    print("writing cards")
+    print(cards)
+    input()
+    for i in range(len(cards)):
+        with open(directory + "/" + cards[i][0] + ".md", "w") as f:
+            f.write(cards[i][1])
+        print(f'{cards[i][0]} written to disk')
 
 def main():
-    response = user_input('Has the test set been read? (Y/n)\n', ['y', 'n', ''], 'Please enter a command')
+    response = user_input('Has the test set been created? (Y/n)\n', ['y', 'n', ''], 'Please enter a command')
     if response == 'y' or response == "":
-        pass
+        terms = read_directory(directory)
     else:
-        make_directory(directory, dataset)
+        terms = make_directory(directory, dataset)
+    # = make_connections(terms) will append weights to the terms list once the function is 
+    terms = make_connections(terms)
+    cards = weight(terms, dictionary, directory)
+
+
+    write_cards(cards, directory)
+    
+    
+    
+
 
 main()
