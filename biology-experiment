@@ -253,15 +253,6 @@ def weight(cards, dictionary, directory):
     return x
     
 
-
-def read_directory(directory):
-    terms = []
-    for filename in os.listdir(directory):
-        with open(directory + "/" + filename, 'r') as f:
-            contents = f.read()
-        terms.append([filename[:-3], contents])
-    return terms
-
 def write_cards(cards, directory):
     print("writing cards")
     #input("Press enter to continue")
@@ -293,22 +284,13 @@ def remove_duplicates(cards):
 
 
 def main():
-    response = user_input('Has the test set been created? (Y/n)\n', ['y', 'n', ''], 'Please enter a command')
-    if response == 'y' or response == "":
-        cards = read_directory(directory)
-    else:
-        cards = make_directory(directory, dataset)
-
+    cards = make_directory(directory)
     # remove duplicate cards
     cards = remove_duplicates(cards)
     
-    # = make_connections(terms) will append weights to the terms list once the function is 
-   
     #cards = weight(cards, dictionary, directory)
     cards = make_connections(cards)
 
     write_cards(cards, directory)
     
-    
-
 main()
