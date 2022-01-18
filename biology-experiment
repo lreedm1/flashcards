@@ -2,8 +2,8 @@ from itertools import count
 import os
 import re
 from titlecase import titlecase
-import string
-
+import string as punctuation
+import time
 
 dataset = "/Users/reed/Documents/Nightly/bio test set.txt"
 dictionary = "/Users/reed/Documents/Nightly/dictionary.txt"
@@ -49,7 +49,7 @@ def make_directory(path, file):
     contents = contents.split(";;;")
     # subdivide contents by ';;'
     contents = [x.split(';;') for x in contents]
-    
+    saved_contents = []
     # format the contents of the list
     for i in range(len(contents)):
         # print the contents to make sure regex is working
@@ -61,61 +61,125 @@ def make_directory(path, file):
         except IndexError:
             print(f'{contents[i]} is too short')
             continue # skip the code below the try
+
+        
         title = titlecase_plus(contents[i][0]) # titlecase the term
         title = title.replace("/", "or") # replace slashes with 'or'
-        definition = contents[i][1][0].upper() + contents[i][1][1:] # capitalize the first letter of the contents
+        title = title.replace('\\', 'or') # replace backslashes with 'or'
+
+        # if the content does not contain adjacanet capital letters, capitalize the first letter
+        for a in range(len(title)-1):
+            if title[a].isupper() and title[a+1].isupper():
+                break
+        else:
+            title = title[0].upper() + title[1:]
+        
+        definition = contents[i][1]
         if definition[-1] == ".": # if definition ends with a period, remove it
             definition = definition[:-1]
 
         print(title + " created")
-        saved_contents = list([])
+
         saved_contents.append([title, definition]) 
         # create a card for each term
         # it is not written to disk until write_cards is called
         
         # convert saved_contents to a tuple so it is not overwritten
-        saved_contents = tuple(saved_contents)
 
     return saved_contents
 
+def normalize(string, mode):
+    '''
+    mode 0 = term
+    mode 1 = definition
+    '''
+    if mode == 0:
+        string = string.lower()
+        # split the string if it contaiins text within parentheses
+        if "(" in string:
+            x = [string.find("("), string.find(")")]
+            string = [string[:x[0]] + string[x[1]+1:], string[x[0]+1:x[1]]]
+            #input(f'string: {string}')
+        else:
+            string = [string]
+    if mode == 1:
+        string = string.lower()
+        string = " " + string + " "
+        string = string.replace("/", "or")
+        string = string.replace('\\', 'or')
+        # replae all punctuation with a space
+        for i in punctuation.punctuation:
+            string = string.replace(i, " ")
+
+    return string
+
 def make_connections(terms):
-    terms = list(terms)
-    print(f'terms2: {terms}')
+    ''''
+    1. Make a list of all the terms
+    2. Make a list of all the definitions
+    3. Make a list of all the normalized terms
+    4. Make a list of all the normalized definitions
+    5. Search the normalized definitions for the normalized terms and add the index of the term to the term's connections list
+    6. Reformat the connections list to be a list of lists in the format [definition index, [term to append index, term to append index]]
+    7. Append the term's connections list to the original term list using the format "\n References:" + " [" + str(index) + "]" 
+    '''
+    # make a list of all the terms and all the definitions
+    print("Making connections...")
+    terms_list = []
+    definitions_list = []
     for i in range(len(terms)):
-        term_lower_1 = terms[i][0]
-        if term_lower_1[-1] == "s": # if the term ends with 's', remove the 's'
-            term_lower_1 = term_lower_1[:-1]
-        print(term_lower_1)
-        term_lower_1 = " " + term_lower_1.lower() + " " # spaces added to prevent inter-word matches
-        
+        terms_list.append(terms[i][0])
+        definitions_list.append(terms[i][1])
+    # make a list of all the normalized terms and all the normalized definitions
+    normalized_terms_list = []
+    normalized_definitions_list = []
+    for i in range(len(terms)):
+        normalized_terms_list.append(normalize(terms[i][0], 0))
+        normalized_definitions_list.append(normalize(terms[i][1], 1))
 
-        term_1 = terms[i][0]
-
-        for j in range(len(terms)):
-            if j == i:
+    # make a list of all the normalized terms and all the normalized definitions
+    term_connections = []
+    term_length = len(terms_list)
+    print("Searching for connections...")
+    for i in range(term_length):
+        for j in range(term_length):
+            if i == j:
                 continue
+            for k in normalized_terms_list[i]:
+                # add spaces to the beginning and end of the term to make sure the term is found in the definition
+                k = " " + k + " "
+                l = " " + str(normalized_definitions_list[j]) + " "
+                if l.find(k) != -1:
+                    term_connections.append([i, j])
+                    break
 
-            term_lower_2 = terms[j][0]
-            if term_lower_2[-1] == "s": # if the term ends with 's', remove the 's'
-                term_lower_2 = term_lower_2[:-1]
-            term_lower_2 = " " + term_lower_2.lower() + " " # remove spaces from the term
-            
-            
-            definition_lower_2 = " " + terms[j][1].lower() 
-            # if the definition does not contain a references section, add a space to the end to allow last-word matches
-            if "references" not in definition_lower_2:
-                definition_lower_2 = definition_lower_2 + " "
-            for i in string.punctuation: # remove all punctuation from the definition
-                definition_lower_2 = definition_lower_2.replace(i, " ")
+    # reformat the connections list to be a list of lists in the format [definition index, [term to append index, term to append index]]
+    connections_list = []
+    print("Reformatting connections...")
+    for i in range(len(term_connections)):
+        # determine if the definition index is already in the connections list
+        for j in range(len(connections_list)):
+            if term_connections[i][1] == connections_list[j][0]:
+                connections_list[j][1].append(term_connections[i][0])
+                break
+        else:
+            connections_list.append([term_connections[i][1], [term_connections[i][0]]])
 
-            definition_2 = terms[j][1]
+    # add the connections to the terms
+    for i in range(len(connections_list)):
+        print(f'{connections_list[i]}')
+        terms[connections_list[i][0]][1] += '\nReferences:'
+        for j in range(len(connections_list[i][1])):
 
-            
-            if term_lower_1 in definition_lower_2 or term_lower_1 + "s" in definition_lower_2: 
-                if not "References" in definition_2: 
-                        definition_2 = definition_2 + "\n\nReferences\n"
-                definition_2 = definition_2 + f'[[{term_1}]] '
-                terms[j][1] = definition_2
+            terms[connections_list[i][0]][1] += f" [[{terms[connections_list[i][1][j]][0]}]]"
+        #input(f' terms[{connections_list[i][0]}]: {terms[connections_list[i][0]]}')
+
+
+    for i in range(len(terms)):
+        print()
+        print(terms[i][0])
+        print(terms[i][1])
+    
     return terms
         
 def weight(cards, dictionary, directory): 
@@ -197,28 +261,51 @@ def read_directory(directory):
 
 def write_cards(cards, directory):
     print("writing cards")
-    print(cards)
-    input()
+    #input("Press enter to continue")
     for i in range(len(cards)):
         with open(directory + "/" + cards[i][0] + ".md", "w") as f:
             f.write(cards[i][1])
         print(f'{cards[i][0]} written to disk')
+    
+def remove_duplicates(cards):
+    # remove all duplicate terms by adding the next term to the first term, then delete the second term
+    y = 0 # y accounts for the number of duplicates removed
+    for i in range(len(cards)):
+        x = 0 # x functions as a counter for the number of times the first term has been added to the second term
+        for j in range(i + 1, len(cards)):
+            j -= x # j is the index of the second term, and x is the number of times the first term has been added to the second term
+            if cards[i][0] == cards[j][0]:
+                # add "Definition 1:\n" to "Term 1", then "Definition 2\n" to "Term 1"
+                
+                if x == 0:
+                    cards[i][1] = "Definition 1:\n" + cards[i][1]
+                cards[i][1] += "\n\n" + "Definition " + str(x + 2) + ":\n" + cards[j][1]
+                # remove the second term from the list
+                print(f'Removing {cards[j][0]}')
+                cards.pop(j)
+
+                x += 1
+                y += 1
+    return cards
+
 
 def main():
     response = user_input('Has the test set been created? (Y/n)\n', ['y', 'n', ''], 'Please enter a command')
     if response == 'y' or response == "":
-        terms = read_directory(directory)
+        cards = read_directory(directory)
     else:
-        terms = make_directory(directory, dataset)
-    # = make_connections(terms) will append weights to the terms list once the function is 
-    terms = make_connections(terms)
-    cards = weight(terms, dictionary, directory)
+        cards = make_directory(directory, dataset)
 
+    # remove duplicate cards
+    cards = remove_duplicates(cards)
+    
+    # = make_connections(terms) will append weights to the terms list once the function is 
+   
+    #cards = weight(cards, dictionary, directory)
+    cards = make_connections(cards)
 
     write_cards(cards, directory)
     
     
-    
-
 
 main()
