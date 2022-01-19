@@ -212,10 +212,13 @@ def weight(x, dictionary_path, directory):
     words = words.lower()
     # replace all punctuation with a space except for "–" and "'"
     illegal_characters = punctuation_list.punctuation
-    illegal_characters.replace("–", "")
-    illegal_characters.replace("'", "")
+    illegal_characters = illegal_characters.replace("–", "")
+    illegal_characters = illegal_characters.replace("'", "")
+    illegal_characters = illegal_characters.replace("’", "")
+    
     for i in illegal_characters:
-        words = words.replace(i, " ")
+        words = words.replace("'", "’")
+        words = words.replace(i, "")
     
     words = words.split() # convert y into a list of words by splitting on spaces
     words = [i for i in words if len(i) > 1] # remove words that are 1 character long
@@ -242,16 +245,15 @@ def weight(x, dictionary_path, directory):
         except ValueError:
             continue
 
-    
-    words_in_dictionary.sort(key=lambda x: x[1], reverse=True)
+    words_in_dictionary.sort(key=lambda x: x[1])
     
     sorted_by_card_count = []
     frequency = []
     for i in range(len(words_in_dictionary)):
         sorted_by_card_count.append(words_in_dictionary[i][0])
-        frequency.append(round(words_in_dictionary[i][1]**.5, 2))
-        
-    words_in_dictionary.sort(key=lambda x: x[3])
+        frequency.append(words_in_dictionary[i][1]**.5)
+
+    words_in_dictionary.sort(key=lambda x: x[2])
     
     sorted_by_dictionary_count = []
     for i in range(len(words_in_dictionary)):
@@ -263,23 +265,31 @@ def weight(x, dictionary_path, directory):
         card_count = sorted_by_card_count[i]
         for j in range(len(words_in_dictionary)):
             if sorted_by_dictionary_count[j] == card_count:
-                difference.append([j-i, card_count, frequency[i], (j-i)*frequency[i]])
+                difference.append([[card_count], frequency[i], (j-i)*-1])
                 break
     
     # sort the difference list by the difference
-    difference.sort(key=lambda x: x[3])
+    for i in range(len(difference)):
+        print(i)
+        print(difference[i])
+    difference.sort(key=lambda x: x[2], reverse=True)
 
     
     for i in difference:
         print(i)
+
+    # print the terms and their weights to a file
+    with open(directory + '/' + 'card_statistics.md', 'w') as f:
+        for i in range(len(difference)):
+            f.write(f'{difference[i][0][0]}: {round(abs(difference[i][2])**.5,0)}\n')
+    print("Wrote word statistics to the file 'card_statistics.md'")
 
     input("Press enter to continue...")
 
 
     return None
     
-def get_score(i, j, half):
-    x = (j + i) / 2 - half
+
     
 
 def write_cards(cards, directory):
