@@ -2,11 +2,13 @@ from itertools import count
 import os
 import re
 from titlecase import titlecase
-import string as punctuation
+import string as punctuation_list
 import time
+import numpy as np
+import pandas as pd
 
 dataset = "/Users/reed/Documents/Nightly/bio test set.txt"
-dictionary = "/Users/reed/Documents/Nightly/dictionary.txt"
+dictionary = "/Users/reed/Documents/Nightly/punc_free_dictionary.txt"
 directory = "/Users/reed/Library/Mobile Documents/iCloud~md~obsidian/Documents/biology test"
 
 def user_input(prompt, responses, error_message): # Ask the user a question and return their response
@@ -109,7 +111,7 @@ def normalize(string, mode):
         string = string.replace("/", "or")
         string = string.replace('\\', 'or')
         # replae all punctuation with a space
-        for i in punctuation.punctuation:
+        for i in punctuation_list.punctuation:
             string = string.replace(i, " ")
 
     return string
@@ -184,73 +186,100 @@ def make_connections(terms):
         print(terms[i][1])
     
     return terms
-        
-def weight(cards, dictionary, directory): 
-    # convert cards (which is a tuple) to a list of lists called word_list
-    x = cards
-    word_list = list(cards)
 
-    with open(dictionary, 'r') as f:
-        dictionary = f.read()
+def count_faster(string):   
+    print("Sorting...")
+    string.sort()
+    print("Counting...")
+    x = 0
+    counted = []
+    while True:
+        y = x
+        try:
+            while string[y] == string[x+1]:
+                x += 1
+            x += 1
+            counted.append([string[x-1], x-y])
+        except IndexError:
+            return counted      
+            
 
-    # every few lines, the dictionary contains a line that starts with "#! comment", remove those lines
-    dictionary = [x for x in dictionary.split("\n") if not x.startswith("#!")]
-    # lowercase all words in the dictionary
-    for i in range(len(dictionary)):
-        dictionary[i] = dictionary[i].lower()
-
-   # turn terms into a list of words, and use terms to make a count of how often each word appears
-    words = []
-    for i in range(len(word_list)):
-        # split all of terms [i][1] into a list of words and add them to the words list
-        word_list[i][0] = word_list[i][0].split(" ")
-        word_list[i][1] = word_list[i][1].split(" ")
-
-        for j in range(len(word_list[i][1])):
-            words.append(word_list[i][1][j].lower())
-        for j in range(len(word_list[i][0])):
-            words.append(word_list[i][0][j].lower())
-    # remove puncuation from the words list
-    punctuation = punctuation.punctuation
-    for i in range(len(words)):
-        for j in punctuation:
-            words[i] = words[i].replace(j, "")
-
-    word_list = []
-    count = []
-    for i in range(len(words)):
-        if words[i] not in word_list:
-            word_list.append(words[i])
-            count.append(1)
-        else:
-            count[word_list.index(words[i])] += 1
-
-
-    # zip terms and count together, and sort by count
-    terms_counted = list(zip(word_list, count))
-    terms_counted.sort(key=lambda x: x[1], reverse=True)
-
-    # turn the terms_counted list into a dictionary
-    message = ""
-
-    message += "The most common words are:\n"
-    # add the terms to the message with their counts surrounded by parentheses
-    for i in range(len(terms_counted)):
-      message += f'({terms_counted[i][0]}, {terms_counted[i][1]}) '
-
-    terms_in_dictionary = []
-    for i in range(len(terms_counted)):
-        if terms_counted[i][0] in dictionary:
-            terms_in_dictionary.append(terms_counted[i][0])
+def weight(x, dictionary_path, directory): 
+    words = ''
+    for i in x:
+        for j in i:
+            words += j + ' '
+    words = words.lower()
+    # replace all punctuation with a space except for "–" and "'"
+    illegal_characters = punctuation_list.punctuation
+    illegal_characters.replace("–", "")
+    illegal_characters.replace("'", "")
+    for i in illegal_characters:
+        words = words.replace(i, " ")
     
-    message += "\n\nThe most common words from this set in the dictionary are:\n"
+    words = words.split() # convert y into a list of words by splitting on spaces
+    words = [i for i in words if len(i) > 1] # remove words that are 1 character long
+    words = count_faster(words) # create a list of all unique words and their counts
+    words = [i for i in words if i[1] != 1] # remove all words with a count of 1
+    words.sort(key=lambda x: x[1], reverse=True) # sort the list of words by their counts
+       
+    # read the dictionary and save it to a variable called dictionary using pandas
+    # it is a text file with one word per line and the number of times the word appears in the text seperated by ","
+    dictionary = pd.read_csv(dictionary_path, sep=',', header=None)
+    # seperate the words and their counts into two tuples
+    dictionary_words = dictionary[0].tolist()
+    dictionary_words = [str(i).lower() for i in dictionary_words]
+    dictionary_counts = dictionary[1].tolist()
+    # print dictionary_words
+    # print dictionary_counts
+    
+
+    words_in_dictionary = []
+    # if the word is in the dictionary, save it to words_in_dictionary in the fomrat [word, count, dictionary count, dictionary index]
+    for i in range(len(words)):
+        try:
+            words_in_dictionary.append([words[i][0], words[i][1], dictionary_counts[dictionary_words.index(words[i][0])], dictionary_words.index(words[i][0])])
+        except ValueError:
+            continue
+
+    
+    words_in_dictionary.sort(key=lambda x: x[1], reverse=True)
+    
+    sorted_by_card_count = []
+    frequency = []
+    for i in range(len(words_in_dictionary)):
+        sorted_by_card_count.append(words_in_dictionary[i][0])
+        frequency.append(round(words_in_dictionary[i][1]**.5, 2))
+        
+    words_in_dictionary.sort(key=lambda x: x[3])
+    
+    sorted_by_dictionary_count = []
+    for i in range(len(words_in_dictionary)):
+        sorted_by_dictionary_count.append(words_in_dictionary[i][0])
+
+  
+    difference = []
+    for i in range(len(words_in_dictionary)):
+        card_count = sorted_by_card_count[i]
+        for j in range(len(words_in_dictionary)):
+            if sorted_by_dictionary_count[j] == card_count:
+                difference.append([j-i, card_count, frequency[i], (j-i)*frequency[i]])
+                break
+    
+    # sort the difference list by the difference
+    difference.sort(key=lambda x: x[3])
+
+    
+    for i in difference:
+        print(i)
+
+    input("Press enter to continue...")
 
 
-    # write the terms_counted to a file called 'card_statistics.md'
-    with open(directory + '/card_statistics.md', 'w') as f:
-        f.write(message)
-
-    return x
+    return None
+    
+def get_score(i, j, half):
+    x = (j + i) / 2 - half
     
 
 def write_cards(cards, directory):
@@ -284,11 +313,10 @@ def remove_duplicates(cards):
 
 
 def main():
-    cards = make_directory(directory)
+    cards = make_directory(directory, dataset)
     # remove duplicate cards
+    weight(cards, dictionary, directory)
     cards = remove_duplicates(cards)
-    
-    #cards = weight(cards, dictionary, directory)
     cards = make_connections(cards)
 
     write_cards(cards, directory)
