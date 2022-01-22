@@ -1,0 +1,41 @@
+import string
+
+directory = "/Users/reed/Documents/Nightly/"
+dictionary_path = "largest_dictionary.txt"
+
+print(f'Reading {dictionary_path}')
+with open(directory + dictionary_path, 'r') as dictionary:
+        dictionary = dictionary.read().split('\n')
+print(f'Read {len(dictionary)} words')
+for i in range(len(dictionary)):
+    dictionary[i] = dictionary[i].split('\t')
+
+illegal_characters = string.punctuation
+# remove "-" and "'" from illegal characters
+illegal_characters = illegal_characters.replace("-", "")
+illegal_characters = illegal_characters.replace("'", "")
+illegal_characters.replace("'", "")
+illegal_characters.replace("’", "")
+illegal_characters.replace("-", "")
+punc_free_dictionary = []
+# if dictionary contains punctuation other than "-" or  "'", remove it
+
+print(f'Removing punctuation')
+for word in dictionary:
+    if all(char not in illegal_characters for char in word[0]):
+        # replace all ' with ’
+        word[0] = word[0].replace("'", "’")
+        punc_free_dictionary.append(word)
+
+# write the punc_free_dictionary to a new file called punc_free_dictionary.txt
+with open(directory + "punc_free_dictionary.txt", 'w') as punc_free_dictionary_file:
+
+    for word in punc_free_dictionary:
+        try:
+            punc_free_dictionary_file.write(word[0] + "," + word[1] + "\n")
+        except IndexError:
+            print(f'IndexError: {word}')
+
+print(f'Wrote {len(punc_free_dictionary)} words to {directory}punc_free_dictionary.txt')
+
+exit()
