@@ -1,6 +1,7 @@
 import os
 import re
 from itertools import count
+import timeit
 
 from titlecase import titlecase
 
@@ -68,7 +69,7 @@ def make_directory(path, file):
         title = title.replace("/", "or") # replace slashes with 'or'
         title = title.replace('\\', 'or') # replace backslashes with 'or'
 
-        # if the content does not contain adjacanet capital letters, capitalize the first letter
+        # if the content does not contain adjacent capital letters, capitalize the first letter
         for a in range(len(title)-1):
             if title[a].isupper() and title[a+1].isupper():
                 break
@@ -123,11 +124,21 @@ def remove_duplicates(cards):
 
 
 def main():
+    # time the program
+    stop = []
+    stop.append(timeit.default_timer())
     cards = make_directory(directory, dataset)
-    weight(cards, dictionary, directory)
+    stop.append(timeit.default_timer())
+    scores = weight(cards, dictionary, directory)
+    stop.append(timeit.default_timer())
     cards = remove_duplicates(cards)
-    cards = make_connections(cards)
-
+    stop.append(timeit.default_timer())
+    cards = make_connections(cards, scores)
+    stop.append(timeit.default_timer())
     write_cards(cards, directory)
+    stop.append(timeit.default_timer())
+    for i in range(1, len(stop)):
+        print(f'{stop[i] - stop[i-1]} seconds')
+    print(f'total: {stop[-1] - stop[0]} seconds')
     
 main()

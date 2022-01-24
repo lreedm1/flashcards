@@ -2,7 +2,7 @@ from calendar import c
 import string as punctuation_list
 import pandas as pd
 
-def make_connections(terms):
+def make_connections(terms, scores):
     def normalize(string, mode):
         if mode == 0: #term
             string = string.lower()
@@ -21,7 +21,8 @@ def make_connections(terms):
             for i in punctuation_list.punctuation:
                 string = string.replace(i, " ")
         return string
-    def find_connections(len,terms, definitions, connections):
+    def find_connections(len,terms, definitions):
+        connections = []
         for i in len:
             definition = definitions[i]
             for j in len:
@@ -33,8 +34,34 @@ def make_connections(terms):
                 if term_no_s in definition or term_s in definition:
                     connections.append([i,j])
         return connections
+    def format_connections(connections, mode, length):
+        if mode == "inbound":
+            mode = 1
+        elif mode == "outbound":
+            mode = 0
+        mode2 = 1 - mode
+        connections.sort(key=lambda x: x[mode])
+        formatted_connections = [[connections[0][mode], [connections[0][mode2]]]]
+        for i in range(1, len(connections)):
+            current = connections[i][mode]
+            previous = connections[i-1][mode]
+            if current == previous:
+                formatted_connections[-1][1].append(connections[i][mode2])
+            else:
+                formatted_connections.append([connections[i][mode], [connections[i][mode2]]])
+        # create emtpty lists for the connections that are not in the list
+        for i in length:
+            try:
+                if formatted_connections[i][0] != i:
+                    formatted_connections.insert(i, [i, []])
+            except IndexError:
+                formatted_connections.append([i, []])
+        for i in length:
+            formatted_connections[i] = formatted_connections[i][1]
+        return formatted_connections
+        
     print("Making connections...")
-    normalized_terms_list, normalized_definitions_list, term_connections, connections_list = [],[],[],[]
+    normalized_terms_list, normalized_definitions_list = [],[]
     length = range(len(terms))
     for i in length:
         normalized_terms_list.append(normalize(terms[i][0], 0))
@@ -42,40 +69,20 @@ def make_connections(terms):
 
 
     print("Searching for connections...")
-    term_connections = find_connections(length, normalized_terms_list, normalized_definitions_list, term_connections)
-    input(term_connections)
-
-    # reformat the connections list to be a list of lists in the format [definition index, [term to append index, term to append index]]
-    print("Reformatting connections...")
-    for i in range(len(term_connections)):
-        # determine if the definition index is already in the connections list
-        for j in range(len(connections_list)):
-            if term_connections[i][1] == connections_list[j][0]:
-                connections_list[j][1].append(term_connections[i][0])
-                break
-        else:
-            connections_list.append([term_connections[i][1], [term_connections[i][0]]])
-
-    # add the connections to the terms
-    for i in range(len(connections_list)):
-        print(f'{connections_list[i]}')
-        terms[connections_list[i][0]][1] += '\n\nIncoming References:\n'
-        for j in range(len(connections_list[i][1])):
-
-            terms[connections_list[i][0]][1] += f" [[{terms[connections_list[i][1][j]][0]}]]"
-        #input(f' terms[{connections_list[i][0]}]: {terms[connections_list[i][0]]}')
-
-
+    term_connections = find_connections(length, normalized_terms_list, normalized_definitions_list)
+    inbound_connections = format_connections(term_connections, "inbound", length)
+    outbound_connections = format_connections(term_connections, "outbound", length)
+    print("Writing connections to terms...")
     for i in range(len(terms)):
-        print()
-        print(terms[i][0])
-        print(terms[i][1])
-    
+        terms[i][1] += "\n\nOutbound connections:"
+        for j in outbound_connections[i]:
+            j = "\n[[" + terms[j][0] +  "]]"
+            terms[i][1] += j
+        terms[i][1] += "\n\nInbound connections:"
+        for j in inbound_connections[i]:
+            j = "\n[[" + terms[j][0] +  "]]"
+            terms[i][1] += j
     return terms
-
-
-
-
 
 def weight(x, dictionary_path, directory): 
     words = replace_illegal_and_split(x)
@@ -149,7 +156,7 @@ def weight(x, dictionary_path, directory):
 
     write_card_stats(difference, sorted_by_card_count, directory)
 
-    return None
+    return True
 
 def find_words_in_dictionary(words, dictionary_path):
     # read the dictionary and save it to a variable called dictionary using pandas
