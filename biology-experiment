@@ -1,10 +1,6 @@
-import os
 import re
-from itertools import count
 import timeit
-
 from titlecase import titlecase
-
 from card_analysis import make_connections, weight, write
 
 dataset = "/Users/reed/Documents/Nightly/bio test set.txt"
@@ -43,52 +39,34 @@ def make_directory(path, file):
     # read the file and save it to a list called contents
     with open(dataset, 'r') as f:
         contents = f.read()
-    
-    # the file is a list of terms and definitions seperated by ';;' and ';;;' respectively
-    # split the contents into a list of lists
-    # first, replace all empty terms with '*****'
     contents = contents.replace(';;;;;', '*****')
     contents = contents.split(";;;")
-    # subdivide contents by ';;'
     contents = [x.split(';;') for x in contents]
     saved_contents = []
-    # format the contents of the list
+
     for i in range(len(contents)):
-        # print the contents to make sure regex is working
         try:
-            # if the contents are less than two characters or contain the code "*****", skip the term
             if len(contents[i][1]) < 2 or "*****" in contents[i][1] or "*****" in contents[i][0]:
                 print(f'{contents[i]} is to short or got flagged for being blank')
                 continue
         except IndexError:
             print(f'{contents[i]} is too short')
-            continue # skip the code below the try
-
+            continue
         
-        title = titlecase_plus(contents[i][0]) # titlecase the term
-        title = title.replace("/", "or") # replace slashes with 'or'
-        title = title.replace('\\', 'or') # replace backslashes with 'or'
+        title = titlecase_plus(contents[i][0])
+        title = title.replace("/", "or")
+        title = title.replace('\\', 'or')
 
-        # if the content does not contain adjacent capital letters, capitalize the first letter
-        for a in range(len(title)-1):
-            if title[a].isupper() and title[a+1].isupper():
-                break
-        else:
+        if title[1].islower():
             title = title[0].upper() + title[1:]
-        
+
         definition = contents[i][1]
         definition = definition[0].upper() + definition[1:] # capitalize the first letter
         if definition[-1] == ".": # if definition ends with a period, remove it
             definition = definition[:-1]
-
-        print(title + " created")
-
         saved_contents.append([title, definition]) 
-        # create a card for each term
-        # it is not written to disk until write_cards is called
         
-        # convert saved_contents to a tuple so it is not overwritten
-
+    print("Terms created")
     return saved_contents
 
 
@@ -98,7 +76,7 @@ def write_cards(cards, directory):
     for i in range(len(cards)):
         filename = f'{directory}/{cards[i][0]}.md'
         write(filename, cards[i][1])
-        print(f'{cards[i][0]} written to disk')
+    print('cards written to disk')
 
  
 def remove_duplicates(cards):
@@ -115,28 +93,35 @@ def remove_duplicates(cards):
                     cards[i][1] = "Definition 1:\n" + cards[i][1]
                 cards[i][1] += "\n\n" + "Definition " + str(x + 2) + ":\n" + cards[j][1]
                 # remove the second term from the list
-                print(f'Removing {cards[j][0]}')
+                # print(f'Removing {cards[j][0]}')
                 cards.pop(j)
 
                 x += 1
                 y += 1
     return cards
 
+def stop_append(stop):
+    stop.append(timeit.default_timer())
 
 def main():
     # time the program
     stop = []
-    stop.append(timeit.default_timer())
+    stop_append(stop)
     cards = make_directory(directory, dataset)
-    stop.append(timeit.default_timer())
+
+    stop_append(stop)
     scores = weight(cards, dictionary, directory)
-    stop.append(timeit.default_timer())
+
+    stop_append(stop)
     cards = remove_duplicates(cards)
-    stop.append(timeit.default_timer())
+
+    stop_append(stop)
     cards = make_connections(cards, scores)
-    stop.append(timeit.default_timer())
+
+    stop_append(stop)
     write_cards(cards, directory)
-    stop.append(timeit.default_timer())
+        
+    stop_append(stop)
     for i in range(1, len(stop)):
         print(f'{stop[i] - stop[i-1]} seconds')
     print(f'total: {stop[-1] - stop[0]} seconds')
