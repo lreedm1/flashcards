@@ -119,7 +119,7 @@ def main():
     cards = make_connections(cards, scores)
 
     stop_append(stop)
-    write_cards(cards, directory)
+    #write_cards(cards, directory)
         
     stop_append(stop)
     for i in range(1, len(stop)):

@@ -1,8 +1,6 @@
+from re import X
 import string as punctuation_list
 import timeit
-from pandas import read_csv
-import pandas as pd
-import numpy as np
 
 def make_connections(terms, scores):
     def normalize(string, mode):
@@ -99,7 +97,8 @@ def weight(x, dictionary_path, directory):
                     while string[y] == string[x+1]:
                         x += 1
                     x += 1
-                    counted.append([string[x-1], x-y])
+                    if x-y > 3:
+                        counted.append([string[x-1], x-y])
                 except IndexError:
                     return counted   
         # combine terms_and_defs with spaces
@@ -111,114 +110,78 @@ def weight(x, dictionary_path, directory):
 
         # replace all punctuation with a space except for "–" and "'"
         illegal_characters = punctuation_list.punctuation
-        illegal_characters = illegal_characters.replace("–", "")
         illegal_characters = illegal_characters.replace("'", "")
         illegal_characters = illegal_characters.replace("’", "")
         
         print("Replacing illegal characters...")
         for i in illegal_characters:
             words = words.replace("'", "’")
-            words = words.replace(i, "")
-            words = words.replace("’s", "")
+            words = words.replace(i, " ")
+            words = words.replace("’s", "  ")
 
         words = words.split() # convert y into a list of words by splitting on spaces
         words = [i for i in words if len(i) > 1] # remove words that are 1 character long
         words = count_faster(words) # create a list of all unique words and their counts
-        words = [i for i in words if i[1] != 1] # remove all words with a count of 1
-
+        # sort the list by the count of the word
+        words.sort(key=lambda x: x[1], reverse=True)
+        # convert words to a dictionary
+        words = {words[i][0]:i for i in range(len(words))}
         return words
-    def write_card_stats(terms, sorted_terms, directory, file_name='stats.md'):
+    def write_card_stats(terms, directory, file_name='stats.md'):
         cards_to_print = []
-        for i in range(len(terms)):
-                if terms[i][0][-1] == 's':
-                    try:
-                        sorted_terms.index(terms[i][0][:-1])
-                    except ValueError:
-                        cards_to_print.append([terms[i][0], terms[i][1]])
-                else:
-                    cards_to_print.append([terms[i][0], terms[i][1]])
-        cards_to_print.sort(key=lambda x: x[1], reverse=True)
-        
         print_statement = ""
-        for i in range(len(cards_to_print)):
-            scalar = round(cards_to_print[i][1] * 100)
-            print_statement += f"{scalar} - {cards_to_print[i][0]}\n"
+        for i in terms:
+            scalar = round(terms[i] * 100)
+            print_statement += f"{scalar} - {i}\n"
         
         write(directory + "/" + file_name, print_statement)     
         print("Wrote word statistics to the file 'statistics_filename.md'")
 
     words = replace_illegal_and_split(x)
     dictionary = find_words_in_dictionary(words, dictionary_path)
-    
 
-    sorted_by_card_count = []
-    frequency = []
-    dictionary.sort(key=lambda x: x[1])
-    for i in range(len(dictionary)):
-        sorted_by_card_count.append(dictionary[i][0])
-        frequency.append(dictionary[i][1])
-
-    dictionary.sort(key=lambda x: x[2])
-    sorted_by_dictionary_count = [x[0] for x in dictionary]
+    #for i in dictionary:
+        #input(f'{i} - {dictionary[i][0]}')
+    scores = []
+    for i in dictionary:
+        x = dictionary[i][0]
+        scores.append([dictionary[i][0],i])
     
-   
-    difference = []
-    for i in range(len(dictionary)):
-        card_count = sorted_by_card_count[i]
-        for j in range(len(dictionary)):
-            if sorted_by_dictionary_count[j] == card_count:
-                difference.append([card_count,(j-i)*-1])
-                break
-
-    
-    difference.sort(key=lambda x: x[1], reverse=True)
-    
-    # set all scores that are less than 0 to 0
-    # if the term contains a trailing s and it has a counterpart
-    # set the score of both to be the highest score
-    # if the term or the counterpart has a negative score, set the score to 0
-    for i in range(len(difference)):
-        if difference[i][1] < 0:
-            difference[i][1] = 0
-        if difference[i][0][-1] == 's':
-            try:
-                x = sorted_by_card_count.index(difference[i][0][:-1])
-                if difference[i][1] > difference[x][1] and difference[x][1] > 0:
-                    difference[i][1] = difference[x][1]
-                else:
-                    difference[x][1] = difference[i][1]
-            except ValueError:
-                continue
-
+    scores.sort(key=lambda x: x[0], reverse=True)
+    differences = [[i[1],i[0] - dictionary[i[1]][1]] for i in scores]
+    differences.sort(key=lambda x: x[1], reverse=True)
     # normalize all scores to be between 0 and 1
-    max = difference[0][1]
-    for i in range(len(difference)):
-        difference[i][1] = difference[i][1]/max    
-    write_card_stats(difference, sorted_by_card_count, directory)
+    span = differences[0][1] - differences[-1][1]
+    min = differences[-1][1]
+    for i in range(len(differences)):
+        differences[i][1] = (differences[i][1] - min) / span  
+
+    dictionary2 = {i[0]:i[1] for i in differences}
+    write_card_stats(dictionary2, directory)
 
     return True
 
 def find_words_in_dictionary(words, dictionary_path):
-    words_in_dictionary = []
+    words_in_dictionary = {}
     start = timeit.default_timer()    
     with open(dictionary_path, 'r') as f:
-        dictionary = f.read()
-    dictionary = dictionary.split(',')
-    # for performance, convert the dictionary to a dictionary
-    dictionary = dict(zip(dictionary, range(len(dictionary))))
-    
-    for i in range(len(words)):
+        dictionary_list = f.read().split(',')
+    dictionary = {}
+    x = 0
+    for i in dictionary_list:
+        dictionary[i] = x
+        x += 1
+    for i in words:
         try:
-            words_in_dictionary.append([words[i][0], words[i][1], dictionary[words[i][0]]])
+            words_in_dictionary[i] = [dictionary[i], words[i]]
+            #input(words_in_dictionary[i][0])
         except KeyError:
-            continue
-
-
+            pass
     end = timeit.default_timer()
-    #input(f'It took {end - start} seconds to read the dictionary.')
+    print(f"Time taken to find words in the dictionary: {end - start}")
     return words_in_dictionary
 
 def write(filename, statement):
     with open(filename, 'w') as f:
         f.write(statement)
-    return None
+    return None 
