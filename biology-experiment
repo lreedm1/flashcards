@@ -1,7 +1,6 @@
-import re
 import timeit
 from titlecase import titlecase
-from card_analysis import make_connections, weight, write
+from card_analysis import make_connections, weight_words, write
 
 dataset = "/Users/reed/Documents/Nightly/bio test set.txt"
 dictionary = "/Users/reed/Documents/Nightly/punc_free_dictionary.txt"
@@ -18,112 +17,95 @@ def user_input(prompt, responses, error_message): # Ask the user a question and 
             print(error_message)
             continue
 
+def make_directory(file):
+    def titlecase_plus(text): # run the string through titlecase but allow for acronyms]]
+        text = text.replace('/', ' or ')
+        text = text.replace('\\', ' or ')
+        split_on_space = text.split(' ')
+        acronyms = []
+        for i in split_on_space: 
+            for j in i:
+                if j.isupper():
+                    length = len(i)
+                    start = text.find(i)
+                    acronyms.append([start, start + length, i])
+                    break
+            
+        string_titlecase = titlecase(text)
+        for i in acronyms:
+            string_titlecase = string_titlecase[:i[0]] + i[2] + string_titlecase[i[1]:]
 
-def titlecase_plus(string): # run the string through titlecase but allow for acronyms
-    split_on_space = re.split('\s+', string) # split the string on spaces
-    acronyms = []
-    for i in range(len(split_on_space)): 
-        if split_on_space[i].upper() == split_on_space[i]: # if the word is all caps, add it to the acronyms list
-            length = len(split_on_space[i])
-            start = string.find(split_on_space[i])
-            acronyms.append([start, start + length, split_on_space[i]])
-        
-    string_titlecase = titlecase(string)
-    for i in acronyms: # replace the acronyms with the original capitalization
-        string_titlecase = string_titlecase[:i[0]] + i[2] + string_titlecase[i[1]:]
-
-    return string_titlecase
-
-
-def make_directory(path, file):
-    # read the file and save it to a list called contents
-    with open(dataset, 'r') as f:
+        return string_titlecase
+    with open(file , 'r') as f:
         contents = f.read()
-    contents = contents.replace(';;;;;', '*****')
+    contents = contents.replace(';;;;;', ';;;  ')
     contents = contents.split(";;;")
     contents = [x.split(';;') for x in contents]
-    saved_contents = []
-
-    for i in range(len(contents)):
+    
+    cards = {}
+    for i in contents:
         try:
-            if len(contents[i][1]) < 2 or "*****" in contents[i][1] or "*****" in contents[i][0]:
-                print(f'{contents[i]} is to short or got flagged for being blank')
-                continue
+            for j in i:
+                j = j.strip()
+                if len(i[0]) > 1 and len(i[1]) > 1:
+                    i[0] = titlecase_plus(i[0])
+                    i[1] = i[1][0].upper() + i[1][1:]
+                    if i[1][-1] == '.':
+                        i[1] = i[1][:-1]
+                    cards[i[0]] = i[1]
         except IndexError:
-            print(f'{contents[i]} is too short')
-            continue
-        
-        title = titlecase_plus(contents[i][0])
-        title = title.replace("/", "or")
-        title = title.replace('\\', 'or')
-
-        if title[1].islower():
-            title = title[0].upper() + title[1:]
-
-        definition = contents[i][1]
-        definition = definition[0].upper() + definition[1:] # capitalize the first letter
-        if definition[-1] == ".": # if definition ends with a period, remove it
-            definition = definition[:-1]
-        saved_contents.append([title, definition]) 
-        
+            print(f'{i} improperly formatted')
     print("Terms created")
-    return saved_contents
-
+    return cards
 
 def write_cards(cards, directory):
     print("writing cards")
-    #input("Press enter to continue")
-    for i in range(len(cards)):
-        filename = f'{directory}/{cards[i][0]}.md'
-        write(filename, cards[i][1])
+    for i in cards:
+        filename = f'{directory}/{i}.md'
+        write(filename, cards[i])
     print('cards written to disk')
-
  
 def remove_duplicates(cards):
-    # remove all duplicate terms by adding the next term to the first term, then delete the second term
-    y = 0 # y accounts for the number of duplicates removed
-    for i in range(len(cards)):
-        x = 0 # x functions as a counter for the number of times the first term has been added to the second term
-        for j in range(i + 1, len(cards)):
-            j -= x # j is the index of the second term, and x is the number of times the first term has been added to the second term
-            if cards[i][0] == cards[j][0]:
-                # add "Definition 1:\n" to "Term 1", then "Definition 2\n" to "Term 1"
-                
-                if x == 0:
-                    cards[i][1] = "Definition 1:\n" + cards[i][1]
-                cards[i][1] += "\n\n" + "Definition " + str(x + 2) + ":\n" + cards[j][1]
-                # remove the second term from the list
-                # print(f'Removing {cards[j][0]}')
-                cards.pop(j)
+    no_duplicates = {}
+    for i in cards:
+        if i not in no_duplicates:
+            no_duplicates[i] = [cards[i], 0]
+        else:
+            count = no_duplicates[i][1]
+            if count == 0:
+                no_duplicates[i][0] = "Definition 1:\n" + no_duplicates[i][0]
+            no_duplicates[i][0] += "\n\nDefinition " + str(count + 1) + ":\n" + cards[i]
+            no_duplicates[i][1] += 1
 
-                x += 1
-                y += 1
-    return cards
+    for i in no_duplicates:
+        no_duplicates[i] = no_duplicates[i][0]
+    return no_duplicates
 
 def stop_append(stop):
     stop.append(timeit.default_timer())
 
 def main():
-    # time the program
     stop = []
     stop_append(stop)
-    cards = make_directory(directory, dataset)
 
+    cards = make_directory(dataset)
     stop_append(stop)
-    scores = weight(cards, dictionary, directory)
 
+    scores = weight_words(cards, dictionary, directory)
     stop_append(stop)
+
     cards = remove_duplicates(cards)
-
     stop_append(stop)
-    cards = make_connections(cards, scores)
 
+    cards, normalized_cards = make_connections(cards)
     stop_append(stop)
+
+    #cards = weight_cards(cards, scores)
+    
     #write_cards(cards, directory)
-        
     stop_append(stop)
     for i in range(1, len(stop)):
-        print(f'{stop[i] - stop[i-1]} seconds')
-    print(f'total: {stop[-1] - stop[0]} seconds')
+        print(f'{round(stop[i] - stop[i-1],2)} seconds')
+    print(f'total: {round(stop[-1] - stop[0],2)} seconds')
     
 main()
