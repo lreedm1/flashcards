@@ -83,7 +83,7 @@ def weight_words(terms_and_defs, dictionary_path, directory, file_name='stats.md
     max, min = scores[0][1], scores[-1][1]
     scores = [[i[0], (i[1] - min) / (max - min)] for i in scores]
     scores_dict = {i[0]: i[1] for i in scores}
-    scores = [[j[0], scores_dict[j[0]] * (j[3]**.5)] for j in counts]
+    scores = [[j[0], scores_dict[j[0]] * (j[3])] for j in counts]
     scores.sort(key=lambda x: x[1], reverse=True)
     max, min = scores[0][1], scores[-1][1]
     scores = [[i[0], (i[1] - min) / (max - min)] for i in scores]

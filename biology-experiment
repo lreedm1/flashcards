@@ -6,7 +6,7 @@ dataset = "/Users/reed/Documents/Nightly/bio test set.txt"
 dictionary = "/Users/reed/Documents/Nightly/punc_free_dictionary.txt"
 directory = "/Users/reed/Library/Mobile Documents/iCloud~md~obsidian/Documents/biology test"
 
-def user_input(prompt, responses, error_message): # Ask the user a question and return their response
+def user_input(prompt, responses, error_message):
     while True:
         x = input(prompt)
         if x in responses:
@@ -18,7 +18,7 @@ def user_input(prompt, responses, error_message): # Ask the user a question and 
             continue
 
 def make_directory(file):
-    def titlecase_plus(text): # run the string through titlecase but allow for acronyms]]
+    def titlecase_plus(text):
         text = text.replace('/', ' or ')
         text = text.replace('\\', ' or ')
         split_on_space = text.split(' ')
@@ -102,7 +102,7 @@ def main():
 
     #cards = weight_cards(cards, scores)
     
-    #write_cards(cards, directory)
+    write_cards(cards, directory)
     stop_append(stop)
     for i in range(1, len(stop)):
         print(f'{round(stop[i] - stop[i-1],2)} seconds')
