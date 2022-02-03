@@ -1,6 +1,6 @@
 import timeit
 from titlecase import titlecase
-from card_analysis import make_connections, weight_words, write
+from card_analysis import make_connections, weight_words, weight_cards, write
 
 dataset = "/Users/reed/Documents/Nightly/bio test set.txt"
 dictionary = "/Users/reed/Documents/Nightly/punc_free_dictionary.txt"
@@ -69,18 +69,37 @@ def remove_duplicates(cards):
     no_duplicates = {}
     for i in cards:
         if i not in no_duplicates:
-            no_duplicates[i] = [cards[i], 0]
+            no_duplicates[i] = [cards[i]]
         else:
-            count = no_duplicates[i][1]
-            if count == 0:
-                no_duplicates[i][0] = "Definition 1:\n" + no_duplicates[i][0]
-            no_duplicates[i][0] += "\n\nDefinition " + str(count + 1) + ":\n" + cards[i]
-            no_duplicates[i][1] += 1
-
-    for i in no_duplicates:
-        no_duplicates[i] = no_duplicates[i][0]
+            no_duplicates[i].append(cards[i])
     return no_duplicates
 
+def format_cards(cards, connections, scores):
+    print("formatting cards")
+    for card in cards:
+        text = cards[card]
+        definitions = len(text)
+        if definitions != 1:
+            x = 1
+            for definition in text:
+                formatted_text = f'Definition {x}:\n{definition}'
+                x += 1
+        else:
+            formatted_text = text[0]
+
+        formatted_text += f'\n\nScore: {scores[card]}'
+        outbound, inbound = connections[card]
+        if len(outbound) != 0:
+            formatted_text += '\n\nOutbound Connections:'
+            for i in outbound:
+                formatted_text += f'\n[[{i}]]'
+        if len(inbound) != 0:
+            formatted_text += '\n\nInbound Connections:'
+            for i in inbound:
+                formatted_text += f'\n[[{i}]]'
+        cards[card] = formatted_text
+    return cards
+        
 def stop_append(stop):
     stop.append(timeit.default_timer())
 
@@ -91,17 +110,20 @@ def main():
     cards = make_directory(dataset)
     stop_append(stop)
 
-    scores = weight_words(cards, dictionary, directory)
-    stop_append(stop)
-
     cards = remove_duplicates(cards)
     stop_append(stop)
 
-    cards, normalized_cards = make_connections(cards)
+    scores = weight_words(cards, dictionary, directory)
     stop_append(stop)
 
-    #cards = weight_cards(cards, scores)
+    connections = make_connections(cards)
+    stop_append(stop)
+
+    scores = weight_cards(connections, directory)
+    stop_append(stop)
     
+    cards = format_cards(cards, connections, scores)
+
     write_cards(cards, directory)
     stop_append(stop)
     for i in range(1, len(stop)):

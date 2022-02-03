@@ -32,30 +32,25 @@ def make_connections(terms):
                         break
         return connections
     print("Making connections...")
-    normalized_terms = {i: [normalize(i,0),normalize(terms[i],1)] for i in terms}
+
+    #for i in terms:
+    #    input(terms[i])
+
+
+    normalized_terms = {i: [normalize(i,0),normalize(j,1)] for i in terms for j in terms[i]}
 
     print("Searching for connections...")
-    term_connections = find_connections(normalized_terms)
+    connections = find_connections(normalized_terms)
 
-    print("Writing connections to terms...")
-    for i in terms:
-        definition = terms[i]
-        outbound_connections, inbound_connections = term_connections[i]
-        if outbound_connections != []:
-            definition += "\n\nOutbound Connections:"
-            for j in outbound_connections:
-                definition += "\n[[" + j + "]]"
-        if inbound_connections != []:
-            definition += "\n\nInbound Connections"
-            for j in inbound_connections:
-                definition += "\n[[" + j + "]]"
-        terms[i] = definition
-    return terms, normalized_terms
+         
+    return connections
 
-def weight_words(terms_and_defs, dictionary_path, directory, file_name='stats.md'):
+def weight_words(terms_and_defs, dictionary_path, directory, file_name='word stats.md'):
     words = ''
     for i in terms_and_defs:
-        words += i + ' ' + terms_and_defs[i] + ' '
+        words += i + ' '
+        for j in terms_and_defs[i]:
+            words += j + ' '
     words = words.lower()
     illegal_characters = punctuation_list.replace("’", " ")
     for i in illegal_characters:
@@ -72,17 +67,15 @@ def weight_words(terms_and_defs, dictionary_path, directory, file_name='stats.md
         except KeyError:
             counted[i] = 1
     words = [[i[0], i[1]] for i in counted.items() if i[1] > 1]
-    words.sort(key=lambda x: x[1])
+    words.sort(key=lambda x: x[1], reverse =True)
         
     counts = find_words_in_dictionary(words, dictionary_path)
 
     counts.sort(key=lambda x: x[1])
-    scores = [[j[0],j[2] - i] for i, j in enumerate(counts)]
-    scores.sort(key=lambda x: x[1])
-
+    scores = [[j[0],i - j[2]] for i, j in enumerate(counts)]
+    scores_dict = {i[0]:i[1] for i in scores}
     max, min = scores[0][1], scores[-1][1]
     scores = [[i[0], (i[1] - min) / (max - min)] for i in scores]
-    scores_dict = {i[0]: i[1] for i in scores}
     scores = [[j[0], scores_dict[j[0]] * (j[3])] for j in counts]
     scores.sort(key=lambda x: x[1], reverse=True)
     max, min = scores[0][1], scores[-1][1]
@@ -94,8 +87,10 @@ def weight_words(terms_and_defs, dictionary_path, directory, file_name='stats.md
         scalar = round(i[1] * 100)
         print_statement += f"{scalar} - {i[0]}\n"
     write(directory + "/" + file_name, print_statement)
-    print("Wrote word statistics to the file 'statistics_filename.md'")
-    return scores
+    print("Wrote word statistics to the file {file_name}")
+
+    scores_dict = {i[0]:i[1] for i in scores}
+    return scores_dict
 
 def find_words_in_dictionary(words, dictionary_path):
     start = timeit.default_timer()    
@@ -112,6 +107,24 @@ def find_words_in_dictionary(words, dictionary_path):
         except KeyError:
             pass
     return words_in_dictionary
+
+def weight_cards(connections, directory, file_name='card stats.md'):
+    card_scores = []
+    for i in connections:
+        outgoing_count = len(connections[i][0])
+        incomming_count = len(connections[i][1])
+        score = outgoing_count ** .5 * incomming_count ** .5
+        card_scores.append([i,score])
+        
+    card_scores.sort(key=lambda x: x[1], reverse =True)
+    max, min = card_scores[0][1], card_scores[-1][1]
+    card_scores = [[i[0], (i[1] - min) / (max - min)] for i in card_scores]
+    card_scores = {i[0]:round(i[1] * 100) for i in card_scores}
+    print_statement = ''
+    for i in card_scores:
+        print_statement += f'{card_scores[i]} - [[{i}]]\n'
+    write(directory + "/" + file_name, print_statement)
+    return card_scores
 
 def write(filename, statement):
     with open(filename, 'w') as f:
