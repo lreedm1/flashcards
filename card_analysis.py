@@ -7,8 +7,8 @@ def make_connections(terms):
         string = " " + string + " "
         string = string.replace("/", "or")
         string = string.replace('\\', 'or')
-
-        for i in punctuation_list:
+        illegal_characters = punctuation_list.replace('-', '')
+        for i in illegal_characters:
             string = string.replace(i, " ")
         if mode == 0: #term
             string = string.lower()
@@ -51,7 +51,7 @@ def weight_words(terms_and_defs, dictionary_path, directory, file_name='word sta
     words = words.lower()
     #import punctuation list as illegal characters but remove the characters "-" and "’" with ""
 
-    illegal_characters = punctuation_list.replace('-', '').replace("'", '')
+    illegal_characters = punctuation_list.replace("'", '')
     words = words.replace("'", "’")
     for i in illegal_characters:
         words = words.replace(i, " ")
