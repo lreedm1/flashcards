@@ -36,13 +36,10 @@ def make_connections(terms):
     #for i in terms:
     #    input(terms[i])
 
-
     normalized_terms = {i: [normalize(i,0),normalize(j,1)] for i in terms for j in terms[i]}
 
     print("Searching for connections...")
-    connections = find_connections(normalized_terms)
-
-         
+    connections = find_connections(normalized_terms)        
     return connections
 
 def weight_words(terms_and_defs, dictionary_path, directory, file_name='word stats.md'):
@@ -52,9 +49,11 @@ def weight_words(terms_and_defs, dictionary_path, directory, file_name='word sta
         for j in terms_and_defs[i]:
             words += j + ' '
     words = words.lower()
-    illegal_characters = punctuation_list.replace("’", " ")
+    #import punctuation list as illegal characters but remove the characters "-" and "’" with ""
+
+    illegal_characters = punctuation_list.replace('-', '').replace("'", '')
+    words = words.replace("'", "’")
     for i in illegal_characters:
-        words = words.replace("'", "’")
         words = words.replace(i, " ")
 
     words = words.split(" ")
