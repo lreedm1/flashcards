@@ -113,7 +113,7 @@ def weight_cards(connections, directory, file_name='card stats.md'):
     for i in connections:
         outgoing_count = len(connections[i][0])
         incomming_count = len(connections[i][1])
-        score = outgoing_count ** .5 * incomming_count ** .5
+        score = (outgoing_count + incomming_count) ** .5
         card_scores.append([i,score])
         
     card_scores.sort(key=lambda x: x[1], reverse =True)
