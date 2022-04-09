@@ -75,6 +75,17 @@ def remove_duplicates(cards):
     return no_duplicates
 
 def format_cards(cards, connections, scores):
+    def format_connections(connection_title, connections, scores, formatted_text):
+        if len(connections) == 0:
+            return formatted_text
+        formatted_text += f'\n\n{connection_title}:'
+        for a,i in enumerate(connections):
+            connections[a] = [scores[i], i]
+        connections = sorted(connections, key=lambda x: x[0], reverse=True)
+        #input(connections)
+        for i in connections:
+            formatted_text += f'\n{i[0]} - [[{i[1]}]]'
+        return formatted_text
     print("formatting cards")
     for card in cards:
         text = cards[card]
@@ -89,14 +100,9 @@ def format_cards(cards, connections, scores):
 
         formatted_text += f'\n\nScore: {scores[card]}'
         outbound, inbound = connections[card]
-        if len(outbound) != 0:
-            formatted_text += '\n\nOutbound Connections:'
-            for i in outbound:
-                formatted_text += f'\n[[{i}]]'
-        if len(inbound) != 0:
-            formatted_text += '\n\nInbound Connections:'
-            for i in inbound:
-                formatted_text += f'\n[[{i}]]'
+        formatted_text = format_connections('Outbound Connections', outbound, scores, formatted_text)
+        formatted_text = format_connections('Inbound Connections', inbound, scores, formatted_text)
+        
         cards[card] = formatted_text
     return cards
         
