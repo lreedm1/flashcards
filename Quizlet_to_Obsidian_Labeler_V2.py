@@ -1,6 +1,6 @@
 import timeit
 from titlecase import titlecase
-from card_analysis import make_connections, weight_words, weight_cards, write
+from card_analysis import make_connections, weight_cards, write
 
 dataset = "/Users/reed/Documents/Nightly/bio test set.txt"
 dictionary = "/Users/reed/Documents/Nightly/punc_free_dictionary.txt"
@@ -117,9 +117,6 @@ def main():
     stop_append(stop)
 
     cards = remove_duplicates(cards)
-    stop_append(stop)
-
-    scores = weight_words(cards, dictionary, directory)
     stop_append(stop)
 
     connections = make_connections(cards)
