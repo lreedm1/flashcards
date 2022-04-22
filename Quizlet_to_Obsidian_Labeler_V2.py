@@ -75,17 +75,31 @@ def remove_duplicates(cards):
     return no_duplicates
 
 def format_cards(cards, connections, scores):
-    def format_connections(connection_title, connections, scores, formatted_text):
-        if len(connections) == 0:
+    def format_outbound(outbound, formatted_text, card):
+        formatted_sections = [[0,0]]
+        if outbound == []:
             return formatted_text
-        formatted_text += f'\n\n{connection_title}:'
-        for a,i in enumerate(connections):
-            connections[a] = [scores[i], i]
-        connections = sorted(connections, key=lambda x: x[0], reverse=True)
-        #input(connections)
-        for i in connections:
-            formatted_text += f'\n{i[0]} - [[{i[1]}]]'
+        outbound = sorted(outbound, key=lambda x: len(x), reverse=True)
+        #input(f'connections: {outbound}')
+        for i in outbound:
+            #input(f'i: {i}')
+            start = formatted_text.lower().find(i.lower())
+            if start == -1:
+                print(f'{i} not found in {formatted_text}')
+                continue
+            end = start + len(i)
+            x = 0
+            for j in range(len(formatted_sections)):
+                if start >= formatted_sections[j][0] and start <= formatted_sections[j][1]:
+                    #print(f'{i} overlaps with {formatted_text[formatted_sections[j][0]:formatted_sections[j][1]]}')
+                    x = 1
+            if x == 1:
+                continue
+            formatted_sections.append([start, end])
+            insertion = "[[" + i + "|" + formatted_text[start:end] + "]]"
+            formatted_text = formatted_text[:start] + insertion + formatted_text[end:]
         return formatted_text
+
     print("formatting cards")
     for card in cards:
         text = cards[card]
@@ -97,11 +111,15 @@ def format_cards(cards, connections, scores):
                 x += 1
         else:
             formatted_text = text[0]
-
-        formatted_text += f'\n\nScore: {scores[card]}'
         outbound, inbound = connections[card]
-        formatted_text = format_connections('Outbound Connections', outbound, scores, formatted_text)
-        formatted_text = format_connections('Inbound Connections', inbound, scores, formatted_text)
+        formatted_text = format_outbound(outbound, formatted_text, card)
+        formatted_text += f'\n\nScore: {scores[card]}'
+        if len(inbound) != 0:
+            for a,i in enumerate(inbound):
+                inbound[a] = [scores[i], i]
+            inbound = sorted(inbound, key=lambda x: x[0], reverse=True)
+            for i in inbound:
+                formatted_text += f'\n[[{i[1]}]] - {i[0]}'
         
         cards[card] = formatted_text
     return cards
