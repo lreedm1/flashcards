@@ -80,10 +80,11 @@ def format_cards(cards, connections, scores):
         if outbound == []:
             return formatted_text
         outbound = sorted(outbound, key=lambda x: len(x), reverse=True)
+        formatted_text_static = formatted_text.lower()
         #input(f'connections: {outbound}')
         for i in outbound:
             #input(f'i: {i}')
-            start = formatted_text.lower().find(i.lower())
+            start = formatted_text_static.find(i.lower())
             if start == -1:
                 print(f'{i} not found in {formatted_text}')
                 continue
@@ -91,11 +92,13 @@ def format_cards(cards, connections, scores):
             x = 0
             for j in range(len(formatted_sections)):
                 if start >= formatted_sections[j][0] and start <= formatted_sections[j][1]:
-                    #print(f'{i} overlaps with {formatted_text[formatted_sections[j][0]:formatted_sections[j][1]]}')
+                    print(f'{i} overlaps with {formatted_text[formatted_sections[j][0]:formatted_sections[j][1]]}, {card}')
                     x = 1
             if x == 1:
                 continue
             formatted_sections.append([start, end])
+            start = formatted_text.lower().find(i.lower())
+            end = start + len(i)
             insertion = "[[" + i + "|" + formatted_text[start:end] + "]]"
             formatted_text = formatted_text[:start] + insertion + formatted_text[end:]
         return formatted_text
@@ -113,7 +116,7 @@ def format_cards(cards, connections, scores):
             formatted_text = text[0]
         outbound, inbound = connections[card]
         formatted_text = format_outbound(outbound, formatted_text, card)
-        formatted_text += f'\n\nScore: {scores[card]}'
+        formatted_text += f'\n\nScore - {scores[card]}'
         if len(inbound) != 0:
             for a,i in enumerate(inbound):
                 inbound[a] = [scores[i], i]
