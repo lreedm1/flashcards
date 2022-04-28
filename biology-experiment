@@ -1,17 +1,12 @@
-from itertools import count
-import os
-import re
+import timeit
 from titlecase import titlecase
-import string as punctuation_list
-import time
-import numpy as np
-import pandas as pd
+from card_analysis import make_connections, weight_words, weight_cards, write
 
 dataset = "/Users/reed/Documents/Nightly/bio test set.txt"
 dictionary = "/Users/reed/Documents/Nightly/punc_free_dictionary.txt"
 directory = "/Users/reed/Library/Mobile Documents/iCloud~md~obsidian/Documents/biology test"
 
-def user_input(prompt, responses, error_message): # Ask the user a question and return their response
+def user_input(prompt, responses, error_message):
     while True:
         x = input(prompt)
         if x in responses:
@@ -22,375 +17,131 @@ def user_input(prompt, responses, error_message): # Ask the user a question and 
             print(error_message)
             continue
 
-
-def titlecase_plus(string): # run the string through titlecase but allow for acronyms
-    split_on_space = re.split('\s+', string) # split the string on spaces
-    acronyms = []
-    for i in range(len(split_on_space)): 
-        if split_on_space[i].upper() == split_on_space[i]: # if the word is all caps, add it to the acronyms list
-            length = len(split_on_space[i])
-            start = string.find(split_on_space[i])
-            acronyms.append([start, start + length, split_on_space[i]])
-        
-    string_titlecase = titlecase(string)
-    for i in acronyms: # replace the acronyms with the original capitalization
-        string_titlecase = string_titlecase[:i[0]] + i[2] + string_titlecase[i[1]:]
-
-    return string_titlecase
-
-
-def make_directory(path, file):
-    # read the file and save it to a list called contents
-    with open(dataset, 'r') as f:
-        contents = f.read()
-    
-    # the file is a list of terms and definitions seperated by ';;' and ';;;' respectively
-    # split the contents into a list of lists
-    # first, replace all empty terms with '*****'
-    contents = contents.replace(';;;;;', '*****')
-    contents = contents.split(";;;")
-    # subdivide contents by ';;'
-    contents = [x.split(';;') for x in contents]
-    saved_contents = []
-    # format the contents of the list
-    for i in range(len(contents)):
-        # print the contents to make sure regex is working
-        try:
-            # if the contents are less than two characters or contain the code "*****", skip the term
-            if len(contents[i][1]) < 2 or "*****" in contents[i][1] or "*****" in contents[i][0]:
-                print(f'{contents[i]} is to short or got flagged for being blank')
-                continue
-        except IndexError:
-            print(f'{contents[i]} is too short')
-            continue # skip the code below the try
-
-        
-        title = titlecase_plus(contents[i][0]) # titlecase the term
-        title = title.replace("/", "or") # replace slashes with 'or'
-        title = title.replace('\\', 'or') # replace backslashes with 'or'
-
-        # if the content does not contain adjacanet capital letters, capitalize the first letter
-        for a in range(len(title)-1):
-            if title[a].isupper() and title[a+1].isupper():
-                break
-        else:
-            title = title[0].upper() + title[1:]
-        
-        definition = contents[i][1]
-        definition = definition[0].upper() + definition[1:] # capitalize the first letter
-        if definition[-1] == ".": # if definition ends with a period, remove it
-            definition = definition[:-1]
-
-        print(title + " created")
-
-        saved_contents.append([title, definition]) 
-        # create a card for each term
-        # it is not written to disk until write_cards is called
-        
-        # convert saved_contents to a tuple so it is not overwritten
-
-    return saved_contents
-
-def normalize(string, mode):
-    '''
-    mode 0 = term
-    mode 1 = definition
-    '''
-    if mode == 0:
-        string = string.lower()
-        # split the string if it contaiins text within parentheses
-        if "(" in string:
-            x = [string.find("("), string.find(")")]
-            string = [string[:x[0]] + string[x[1]+1:], string[x[0]+1:x[1]]]
-            #input(f'string: {string}')
-        else:
-            string = [string]
-    if mode == 1:
-        string = string.lower()
-        string = " " + string + " "
-        string = string.replace("/", "or")
-        string = string.replace('\\', 'or')
-        # replae all punctuation with a space
-        for i in punctuation_list.punctuation:
-            string = string.replace(i, " ")
-
-    return string
-
-def make_connections(terms):
-    ''''
-    1. Make a list of all the terms
-    2. Make a list of all the definitions
-    3. Make a list of all the normalized terms
-    4. Make a list of all the normalized definitions
-    5. Search the normalized definitions for the normalized terms and add the index of the term to the term's connections list
-    6. Reformat the connections list to be a list of lists in the format [definition index, [term to append index, term to append index]]
-    7. Append the term's connections list to the original term list using the format "\n References:" + " [" + str(index) + "]" 
-    '''
-    # make a list of all the terms and all the definitions
-    print("Making connections...")
-    terms_list = []
-    definitions_list = []
-    for i in range(len(terms)):
-        terms_list.append(terms[i][0])
-        definitions_list.append(terms[i][1])
-    # make a list of all the normalized terms and all the normalized definitions
-    normalized_terms_list = []
-    normalized_definitions_list = []
-    for i in range(len(terms)):
-        normalized_terms_list.append(normalize(terms[i][0], 0))
-        normalized_definitions_list.append(normalize(terms[i][1], 1))
-
-    # make a list of all the normalized terms and all the normalized definitions
-    term_connections = []
-    term_length = len(terms_list)
-    print("Searching for connections...")
-    for i in range(term_length):
-        for j in range(term_length):
-            if i == j:
-                continue
-            for k in normalized_terms_list[i]:
-                # add spaces to the beginning and end of the term to make sure the term is found in the definition
-                m = " " + k + "s "
-                k = " " + k + " "
-                
-                l = " " + str(normalized_definitions_list[j]) + " "
-                if l.find(k) != -1 or l.find(m) != -1:
-                    term_connections.append([i, j])
+def make_directory(file):
+    def titlecase_plus(text):
+        text = text.replace('/', ' or ')
+        text = text.replace('\\', ' or ')
+        split_on_space = text.split(' ')
+        acronyms = []
+        for i in split_on_space: 
+            for j in i:
+                if j.isupper():
+                    length = len(i)
+                    start = text.find(i)
+                    acronyms.append([start, start + length, i])
                     break
+            
+        string_titlecase = titlecase(text)
+        for i in acronyms:
+            string_titlecase = string_titlecase[:i[0]] + i[2] + string_titlecase[i[1]:]
 
-    # reformat the connections list to be a list of lists in the format [definition index, [term to append index, term to append index]]
-    connections_list = []
-    print("Reformatting connections...")
-    for i in range(len(term_connections)):
-        # determine if the definition index is already in the connections list
-        for j in range(len(connections_list)):
-            if term_connections[i][1] == connections_list[j][0]:
-                connections_list[j][1].append(term_connections[i][0])
-                break
-        else:
-            connections_list.append([term_connections[i][1], [term_connections[i][0]]])
-
-    # add the connections to the terms
-    for i in range(len(connections_list)):
-        print(f'{connections_list[i]}')
-        terms[connections_list[i][0]][1] += '\n\nReferences:\n'
-        for j in range(len(connections_list[i][1])):
-
-            terms[connections_list[i][0]][1] += f" [[{terms[connections_list[i][1][j]][0]}]]"
-        #input(f' terms[{connections_list[i][0]}]: {terms[connections_list[i][0]]}')
-
-
-    for i in range(len(terms)):
-        print()
-        print(terms[i][0])
-        print(terms[i][1])
+        return string_titlecase
+    with open(file , 'r') as f:
+        contents = f.read()
+    contents = contents.replace(';;;;;', ';;;  ')
+    contents = contents.split(";;;")
+    contents = [x.split(';;') for x in contents]
     
-    return terms
-
-def count_faster(string):   
-    print("Sorting...")
-    string.sort()
-    print("Counting...")
-    x = 0
-    counted = []
-    while True:
-        y = x
+    cards = {}
+    for i in contents:
         try:
-            while string[y] == string[x+1]:
-                x += 1
-            x += 1
-            counted.append([string[x-1], x-y])
+            for j in i:
+                j = j.strip()
+                if len(i[0]) > 1 and len(i[1]) > 1:
+                    i[0] = titlecase_plus(i[0])
+                    i[1] = i[1][0].upper() + i[1][1:]
+                    if i[1][-1] == '.':
+                        i[1] = i[1][:-1]
+                    cards[i[0]] = i[1]
         except IndexError:
-            return counted      
-            
-
-def weight(x, dictionary_path, directory): 
-    words = ''
-    for i in x:
-        for j in i:
-            words += j + ' '
-    words = words.lower()
-    # replace all punctuation with a space except for "–" and "'"
-    illegal_characters = punctuation_list.punctuation
-    illegal_characters = illegal_characters.replace("–", "")
-    illegal_characters = illegal_characters.replace("'", "")
-    illegal_characters = illegal_characters.replace("’", "")
-    
-    print("Replacing illegal characters...")
-    for i in illegal_characters:
-        words = words.replace("'", "’")
-        words = words.replace(i, "")
-        words = words.replace("’s", "")
-
-    words = words.split() # convert y into a list of words by splitting on spaces
-    words = [i for i in words if len(i) > 1] # remove words that are 1 character long
-    words = count_faster(words) # create a list of all unique words and their counts
-    words = [i for i in words if i[1] != 1] # remove all words with a count of 1
-    words.sort(key=lambda x: x[1], reverse=True) # sort the list of words by their counts
-    #  if the second to last    
-
-
-    # read the dictionary and save it to a variable called dictionary using pandas
-    # it is a text file with one word per line and the number of times the word appears in the text seperated by ","
-    dictionary = pd.read_csv(dictionary_path, sep=',', header=None)
-    # seperate the words and their counts into two tuples
-    dictionary_words = dictionary[0].tolist()
-    dictionary_words = [str(i).lower() for i in dictionary_words]
-    dictionary_counts = dictionary[1].tolist()
-   
-    
-
-    words_in_dictionary = []
-    # if the word is in the dictionary, save it to words_in_dictionary in the fomrat [word, count, dictionary count, dictionary index]
-    for i in range(len(words)):
-        try:
-            x = dictionary_words.index(words[i][0])
-            words_in_dictionary.append([words[i][0], words[i][1], dictionary_counts[x], x])
-        except ValueError:
-            continue
-
-    # create a list called sorted by card count that contains 
-    # the words in words_in_dictionary sorted by their counts
-    # frequency is used to provide the freqency of each word
-    # more efficiently than sorting the list of words_in_dictionary again
-    words_in_dictionary.sort(key=lambda x: x[1])
-    sorted_by_card_count = []
-    frequency = []
-    for i in range(len(words_in_dictionary)):
-        sorted_by_card_count.append(words_in_dictionary[i][0])
-        frequency.append(words_in_dictionary[i][1])
-
-
-    # for the terms which exist with a trailing s and without a traling s
-    # add the count of their counterpart to the count of the term
-    # this is to account for the fact that the dictionary counts the s as a different word
-    for i in range(len(words_in_dictionary)):
-        if words_in_dictionary[i][0][-1] == 's':
-            try:
-                x = sorted_by_card_count.index(words_in_dictionary[i][0][:-1])
-                words_in_dictionary[i][1] += words_in_dictionary[x][1]
-                words_in_dictionary[x][1] += words_in_dictionary[i][1]
-            except ValueError:
-                continue
-    
-
-
-
-    words_in_dictionary.sort(key=lambda x: x[2])
-    sorted_by_dictionary_count = []
-    for i in range(len(words_in_dictionary)):
-        sorted_by_dictionary_count.append(words_in_dictionary[i][0])
-
-  
-
-    max = 0
-    
-    difference = []
-    for i in range(len(words_in_dictionary)):
-        card_count = sorted_by_card_count[i]
-        for j in range(len(words_in_dictionary)):
-            if sorted_by_dictionary_count[j] == card_count:
-                difference.append([card_count,(j-i)*-1])
-                break
-
-    # sort the difference list by the difference
-    difference.sort(key=lambda x: x[1], reverse=True)
-    # set all scores that are less than 0 to 0
-    # if the term contains a trailing s and it has a counterpart
-    # set the score of both to be the highest score
-    # if the term or the counterpart has a negative score, set the score to 0
-    for i in range(len(difference)):
-        if difference[i][1] < 0:
-            difference[i][1] = 0
-        if difference[i][0][-1] == 's':
-            try:
-                x = sorted_by_card_count.index(difference[i][0][:-1])
-                if difference[i][1] > difference[x][1] and difference[x][1] > 0:
-                    difference[i][1] = difference[x][1]
-                else:
-                    difference[x][1] = difference[i][1]
-            except ValueError:
-                continue
-    for i in range(len(difference)):
-        print(i)
-        print(difference[i])
-    
-
-
-    # print the terms and their weights to a file
-    # if the term contains a trailing s, try to find the counterpart without a trailing s
-    
-    cards_to_print = []
-    for i in range(len(difference)):
-            if difference[i][0][-1] == 's':
-                try:
-                    print("try")
-                    x = sorted_by_card_count.index(difference[i][0][:-1])
-                    
-
-                except ValueError:
-                    print("value error")
-                    cards_to_print.append([difference[i][0], difference[i][1]])
-                    
-                    
-            else:
-                print("else")
-                cards_to_print.append([difference[i][0], difference[i][1]])
-            
-    cards_to_print.sort(key=lambda x: x[1], reverse=True)
-    with open(directory + '/' + 'card_statistics.md', 'w') as f:
-        for i in cards_to_print:
-            print(i)
-            f.write(str(round(i[1] / 100)) + ' - ' + i[0] + '\n')
-
-            
-    print("Wrote word statistics to the file 'card_statistics.md'")
-
-    input("Press enter to continue...")
-
-
-    return None
-    
-
-    
-
-def write_cards(cards, directory):
-    print("writing cards")
-    #input("Press enter to continue")
-    for i in range(len(cards)):
-        with open(directory + "/" + cards[i][0] + ".md", "w") as f:
-            f.write(cards[i][1])
-        print(f'{cards[i][0]} written to disk')
-    
-def remove_duplicates(cards):
-    # remove all duplicate terms by adding the next term to the first term, then delete the second term
-    y = 0 # y accounts for the number of duplicates removed
-    for i in range(len(cards)):
-        x = 0 # x functions as a counter for the number of times the first term has been added to the second term
-        for j in range(i + 1, len(cards)):
-            j -= x # j is the index of the second term, and x is the number of times the first term has been added to the second term
-            if cards[i][0] == cards[j][0]:
-                # add "Definition 1:\n" to "Term 1", then "Definition 2\n" to "Term 1"
-                
-                if x == 0:
-                    cards[i][1] = "Definition 1:\n" + cards[i][1]
-                cards[i][1] += "\n\n" + "Definition " + str(x + 2) + ":\n" + cards[j][1]
-                # remove the second term from the list
-                print(f'Removing {cards[j][0]}')
-                cards.pop(j)
-
-                x += 1
-                y += 1
+            print(f'{i} improperly formatted')
+    print("Terms created")
     return cards
 
+def write_cards(directory, cards):
+    print("writing cards")
+    for i in cards:
+        filename = f'{directory}/{i}.md'
+        write(filename, i)
+    print('cards written to disk')
+ 
+def remove_duplicates(cards):
+    no_duplicates = {}
+    for i in cards:
+        if i not in no_duplicates:
+            no_duplicates[i] = [cards[i]]
+        else:
+            no_duplicates[i].append(cards[i])
+    return no_duplicates
+
+def format_cards(cards, connections, scores):
+    def format_connections(connections, scores, formatted_text, inbound):
+        if len(connections) == 0:
+            return formatted_text
+        elif inbound:
+            for connection in connections:
+                connection_lower, formatted_text_lower = connection.lower(), formatted_text.lower()
+                location = formatted_text_lower.find(connection_lower)
+                if location == -1:
+                    print(f'{connection} not found in {formatted_text}')
+                else: # some text [[definition text - score |link]] some text ->  some text *definition - score* some text
+                    formatted_text = formatted_text[:location] + '[[' + formatted_text[location: location + len(connection_lower)] + f'|{connection}]]' + formatted_text[location + len(connection_lower):]
+        else:
+            formatted_text += f'\n\nInbound Connections:'
+            for a,i in enumerate(connections):
+                connections[a] = [scores[i], i]
+            connections = sorted(connections, key=lambda x: x[0], reverse=True)
+            for i in connections:
+                formatted_text += f'\n{i[0]} - [[{i[1]}]]'
+            return formatted_text
+    print("formatting cards")
+    for card in cards:
+        text = cards[card]
+        definitions = len(text)
+        if definitions != 1:
+            x = 1
+            for definition in text:
+                formatted_text = f'Definition {x}:\n{definition}'
+                x += 1
+        else:
+            formatted_text = text[0]
+
+        formatted_text += f'\n\nScore: {scores[card]}'
+        outbound, inbound = connections[card]
+        formatted_text = format_connections(outbound, scores, formatted_text, inbound = False)
+        formatted_text = format_connections(inbound, scores, formatted_text, inbound = True)
+        
+        cards[card] = formatted_text
+    return cards
+        
+def stop_append(stop):
+    stop.append(timeit.default_timer())
 
 def main():
-    cards = make_directory(directory, dataset)
-    # remove duplicate cards
-    weight(cards, dictionary, directory)
-    cards = remove_duplicates(cards)
-    cards = make_connections(cards)
+    stop = []
+    stop_append(stop)
 
-    write_cards(cards, directory)
+    cards = make_directory(dataset)
+    stop_append(stop)
+
+    cards = remove_duplicates(cards)
+    stop_append(stop)
+
+    scores = weight_words(cards, dictionary, directory)
+    stop_append(stop)
+
+    connections = make_connections(cards)
+    stop_append(stop)
+
+    scores = weight_cards(connections, directory)
+    stop_append(stop)
+    
+    cards = format_cards(cards, connections, scores)
+
+    write_cards(directory, cards)
+    stop_append(stop)
+    for i in range(1, len(stop)):
+        print(f'{round(stop[i] - stop[i-1],2)} seconds')
+    print(f'total: {round(stop[-1] - stop[0],2)} seconds')
     
 main()
