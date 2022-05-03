@@ -5,17 +5,6 @@ from card_analysis import make_connections, weight_cards, write
 dataset = "/Users/reed/Documents/Nightly/bio test set.txt"
 directory = "/Users/reed/Library/Mobile Documents/iCloud~md~obsidian/Documents/biology test"
 
-def user_input(prompt, responses, error_message):
-    while True:
-        x = input(prompt)
-        if x in responses:
-            return x
-        elif x == 'q':
-            quit()
-        else:
-            print(error_message)
-            continue
-
 def make_directory(file):
     def titlecase_plus(text):
         text = text.replace('/', ' or ')
@@ -118,20 +107,16 @@ def format_cards(cards, connections, scores):
     return cards
 
 def export(cards, scores, directory):
-    # sort cars by score
     exports = {}
     for i in cards:
         exports[i] = [scores[i], str(cards[i])]
     exports = sorted(exports.items(), key=lambda x: x[1][0], reverse=True)
-
     export_statement = ''
-    # print the type of cards
     for i in exports:
         if i[1][0] > 0:
             export_statement += f'{i[0]};;{i[1][1][2:-2]};;;'
     with open(f'{directory}/sorted_terms.txt', 'w') as f:
         f.write(export_statement)
-
         
 def stop_append(stop):
     stop.append(timeit.default_timer())

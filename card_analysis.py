@@ -1,4 +1,3 @@
-import timeit
 punctuation_list = '!#$%&()*+,-./:;<=>?@[\]^_`{|}~'
 
 def make_connections(terms):
