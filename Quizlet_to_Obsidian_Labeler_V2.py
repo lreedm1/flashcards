@@ -116,6 +116,22 @@ def format_cards(cards, connections, scores):
         
         cards[card] = formatted_text
     return cards
+
+def export(cards, scores, directory):
+    # sort cars by score
+    exports = {}
+    for i in cards:
+        exports[i] = [scores[i], str(cards[i])]
+    exports = sorted(exports.items(), key=lambda x: x[1][0], reverse=True)
+
+    export_statement = ''
+    # print the type of cards
+    for i in exports:
+        if i[1][0] > 0:
+            export_statement += f'{i[0]};;{i[1][1][2:-2]};;;'
+    with open(f'{directory}/sorted_terms.txt', 'w') as f:
+        f.write(export_statement)
+
         
 def stop_append(stop):
     stop.append(timeit.default_timer())
@@ -136,6 +152,8 @@ def main():
     scores = weight_cards(connections, directory)
     stop_append(stop)
     
+    export(cards, scores, directory)
+
     cards = format_cards(cards, connections, scores)
 
     write_cards(cards, directory)
