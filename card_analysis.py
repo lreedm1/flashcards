@@ -26,7 +26,7 @@ def make_connections(terms):
             for j in dictionary:
                 if i == j: continue
                 for k in terms:
-                    if k in dictionary[j][1]:
+                    if k in dictionary[j][1] or k in ''.join(dictionary[j][0]):
                         connections[j][0].append(i)
                         connections[i][1].append(j)
                         break
