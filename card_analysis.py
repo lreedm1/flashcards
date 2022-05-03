@@ -40,19 +40,14 @@ def make_connections(terms):
     return connections
 
 def weight_cards(connections, directory, file_name='card stats.md'):
-    card_scores = []
-    for i in connections:
-        outgoing_count = len(connections[i][0])
-        incomming_count = len(connections[i][1])
-        score = (outgoing_count + incomming_count) ** .5
-        card_scores.append([i,score])
-        
-    card_scores.sort(key=lambda x: x[1], reverse =True)
+    card_scores = {i:len(connections[i][0]) *.1 + len(connections[i][1]) for i in connections}
+    card_scores = sorted(card_scores.items(), key=lambda x: x[1], reverse=True)
     max, min = card_scores[0][1], card_scores[-1][1]
-    card_scores = [[i[0], (i[1] - min) / (max - min)] for i in card_scores]
-    card_scores = {i[0]:round(i[1] * 100) for i in card_scores}
+    card_scores = {i[0]:(i[1] - min) * 100 / (max - min) for i in sorted(card_scores, key=lambda x: x[1], reverse=True)}
+
     print_statement = ''
     for i in card_scores:
+        card_scores[i] = round(card_scores[i], 1) if card_scores[i] < 1 else round(card_scores[i])
         print_statement += f'{card_scores[i]} - [[{i}]]\n'
     write(directory + "/" + file_name, print_statement)
     return card_scores
