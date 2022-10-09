@@ -77,7 +77,7 @@ def make_connections(terms):
 	return connections
 
 def weight_cards(connections, terms, directory, file_name='card stats.md'):
-	card_scores = sorted([(a,len(i[0]) *.1 + len(i[1])) for a,i in enumerate(connections)], key=lambda x: x[1], reverse=True)
+	card_scores = sorted([(a,len(i[0]) * .1 + len(i[1])) for a,i in enumerate(connections)], key=lambda x: x[1], reverse=True)
 	max, min = card_scores[0][1], card_scores[-1][1]
 	card_scores = [[i[0],(i[1] - min) * 100 / (max - min)] for i in card_scores]
 	print_statement = ''

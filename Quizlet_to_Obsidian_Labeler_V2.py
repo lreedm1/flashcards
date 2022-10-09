@@ -56,11 +56,11 @@ def write_cards(cards, directory):
 def format_cards(card_pairs, connections, scores):
 	def format_definition(outbound_connections, card_pair, card_pairs):
 		if len(card_pair[0][1]) != 1:
-			statement = '**Definition 1:**\n'
+			statement = '<u>Definition 1</u>\n'
 			formatted = statement + card_pair[1][1][0]
 			unformatted =  ' ' + ' ' * len(statement) + card_pair[0][1][0]
 			for a in range(len(card_pair[0][1])-1):
-				statement = f'\n\n**Definition {a+2}:**\n'
+				statement = f'\n\n<u>Definition {a+2}</u>\n'
 				formatted += statement + card_pair[1][1][a+1]
 				unformatted += ' ' * len(statement) + card_pair[0][1][a+1]
 		else:
@@ -129,4 +129,6 @@ def main():
 	stop_append(stop)
 
 	print_times(stop)
-main()
+
+if __name__ == '__main__':
+	main()
